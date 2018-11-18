@@ -1,0 +1,132 @@
+body {
+    /*    padding: 0px;
+    background-color: #DADADA;
+    background-color: white;*/
+    color: black;
+    font: 18px "Inconsolata", Helvetica, Arial, sans-serif;
+    line-height: 24px;
+}
+
+#javascript-editor {
+    /*    display: block;
+    z-index: 2;
+    position: absolute;
+    top: 200px;
+    bottom: 0px;
+    right: 0px;*/
+}
+
+#supercollider-editor {
+    /*    display: block;
+    z-index: 2;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;*/
+}
+
+
+.editors {
+    padding: 10px;
+}
+
+.CodeMirror {
+    /*border: 1px solid red;*/
+    z-index: 2;
+    width: 700px;
+    height: 320px;
+    margin-left: 5px;
+    /*    display: block;
+    z-index: 2;
+    position: absolute;
+    top: 200px;
+    bottom: 0px;
+    right: 0px;*/
+}
+
+
+
+
+.console {
+    /*#javascript-console, #supercollider-console {*/
+    display: block;
+    margin-left: 10px;
+    background: none;
+    overflow: scroll;
+    border: 1px solid green;
+    z-index: 4;
+    line-height: 14px;
+    width: 600px;
+    height: 57px;
+    font-family: "Inconsolata";
+    font-size: 12px;
+    resize: none;
+    border-style: none;
+    outline: none;
+}
+
+.console span {
+    background: white;
+    padding: 2px 0;
+}
+.console::-webkit-scrollbar {
+    display: none;
+}
+
+.console span::selection {
+    background-color: #E5E5E5;
+    /*color: #fff;*/
+}
+
+canvas {
+    z-index: -1;
+}
+
+*[role="presentation"] span {
+    background: #CECECE;
+    background: rgba(210, 210, 210, 1);
+    background: #E5E5E5;
+    /*padding: 4px 0;*/
+    margin: 0px 0;
+    padding: 4px 0;
+    /* style these a buttons w/o relying on a .button class */
+    z-index: -2;
+}
+
+#appcontrol {
+    /*display: block;*/
+    display: inline-block;
+    /*margin: auto;*/
+    /*float: left;*/
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    /*position: absolute;*/
+    width: 400px;
+    /*top: 0;*/
+    /*left: 20;*/
+    /*bottom: 10;*/
+    /*right: 0;*/
+    font-family: "Inconsolata";
+    font-size: 16px;
+    padding: 4px;
+    outline: none;
+    background-color: #E5E5E5;
+    border: 1px #E5E5E5 solid;
+    border-radius: 0px;
+    transition: none;
+    cursor: unset;
+    text-align: left;
+}
+
+#appcontrol:focus {
+    border: 1px black solid;
+}
+
+#appcontrol::selection {
+    background: #C7C7C7;
+}
+
+#appcontrol:hover {
+    box-shadow: unset;
+    transition: none;
+}
