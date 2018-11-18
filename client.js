@@ -25,6 +25,137 @@ function init() {
             "Shift-Tab": (cm) => cm.execCommand("indentLess"),
         },
     });
+
+    var curWord = "";
+
+    superColliderEditor.on("cursorActivity", function(editor) {
+
+        var A1 = editor.getCursor().line;
+        var A2 = editor.getCursor().ch;
+
+        var B1 = editor.findWordAt({ line: A1, ch: A2 }).anchor.ch;
+        var B2 = editor.findWordAt({ line: A1, ch: A2 }).head.ch;
+
+        curWord = editor.getRange({ line: A1, ch: B1 }, { line: A1, ch: B2 });
+
+        var openBracket = "(";
+        var closeBracket = ")";
+        var curLine = editor.getCursor().line;
+        var lineNow = curLine;
+        var curLineContent;
+        var checkOpen = 1;
+        var bracketCount = 0;
+
+        curLineContent = String(editor.getLine(curLine));
+        checkClose = curLineContent.localeCompare(closeBracket);
+        if (checkClose === 0) {
+            bracketCount += 1;
+            while (lineNow > 0) {
+                lineNow = lineNow - 1;
+                curLineContent = String(editor.getLine(lineNow));
+                checkOpen = curLineContent.localeCompare(openBracket);
+                checkClose = curLineContent.localeCompare(closeBracket);
+                if (checkOpen === 0) {
+                    bracketCount -= 1;
+                } else if (checkClose === 0) {
+                    bracketCount += 1;
+                }
+                if (bracketCount === 0) break;
+            }
+
+            for (var i = lineNow; i < curLine; i++) {
+                editor.addLineClass(i, 'background', 'CodeMirror-activeline-background');
+            }
+        } else {
+            for (var i = 0; i < lineNow; i++) {
+                editor.removeLineClass(i, 'background', 'CodeMirror-activeline-background');
+            }
+        }
+    });
+    superColliderEditor.setOption("extraKeys", {
+        'Cmd-Enter': function() { runsel(); },
+        'Cmd-.': function() { interpret('CmdPeriod.run;'); },
+        'Cmd-/': "toggleComment"
+    });
+
+
+
+    function interpret(data) {
+        // $.ajax({ method: "POST", url: '/interpret', data: { code: data } });
+        socket.emit('interpretSuperCollider', data);
+    }
+
+    // function runtemp(data) {
+    //     // $.ajax({ method: "POST", url: '/runtemp', data: { code: data } });
+    // }
+
+    function runsel() {
+        var selection = superColliderEditor.getSelection();
+        if (selection !== '') {
+            interpret(selection);
+        } else {
+
+            var openBracket = "(";
+            var closeBracket = ")";
+            var curLine = superColliderEditor.getCursor().line;
+            var lineNow = curLine;
+            var lineRem = lineNow;
+            var codeBracket = "";
+            var curLineContent;
+            var checkOpen = 1;
+            var checkClose = 1;
+            var countBrackets = 0;
+            var countBracketsClose = 0;
+            var bracketFound = 0;
+
+            while (lineNow > 0) {
+                lineNow = lineNow - 1;
+                curLineContent = String(superColliderEditor.getLine(lineNow));
+
+                checkClose = curLineContent.localeCompare(closeBracket);
+                if (checkClose === 0) {
+                    countBracketsClose += 1;
+                }
+
+                checkOpen = curLineContent.localeCompare(openBracket);
+                if (checkOpen === 0) {
+                    bracketFound = 1;
+                    if (countBracketsClose === 0) {
+                        countBrackets += 1;
+                        lineRem = lineNow + 1;
+                    } else {
+                        countBracketsClose -= 1;
+                    }
+                }
+
+
+            }
+
+            lineNow = lineRem;
+            if (bracketFound !== 0 && countBrackets > 0) {
+                while (countBrackets !== 0) {
+                    checkClose = String(superColliderEditor.getLine(lineNow)).localeCompare(closeBracket)
+                    if (checkClose === 0 && lineNow >= curLine) {
+                        countBrackets -= 1;
+                    }
+                    checkOpen = String(superColliderEditor.getLine(lineNow)).localeCompare(openBracket)
+                    if (checkOpen === 0 && lineNow >= curLine) {
+                        countBrackets += 1;
+                    }
+                    if (countBrackets === 0) break;
+
+                    codeBracket += String(superColliderEditor.getLine(lineNow));
+                    lineNow += 1;
+                }
+                interpret(codeBracket);
+            } else {
+                interpret(superColliderEditor.getLine(superColliderEditor.getCursor().line));
+            }
+        }
+    };
+
+
+
     var javaScriptEditorContainer = document.getElementById("javascript-editor");
     javaScriptEditor = CodeMirror.fromTextArea(javaScriptEditorContainer, {
         lineNumbers: false,
@@ -49,6 +180,10 @@ function init() {
         files = data;
     });
     socket.emit('pullFiles', "");
+
+    socket.on('toscdconsole', function(data) {
+        logSuperColliderConsole(data);
+    });
 
     superColliderConsole = document.getElementById("supercollider-console");
     javaScriptConsole = document.getElementById("javascript-console");
@@ -117,24 +252,21 @@ function interpretAppControl(value) {
 }
 
 function logJavaScriptConsole(msg) {
-    // if (javaScriptConsole.value) {
-    //     javaScriptConsole.value += "\n" + msg;
-    // } else {
-    //     javaScriptConsole.value = msg;
-    // }
-
-
-    // var span = document.getElementById('someID');
-    // while (javaScriptConsole.firstChild) {
-    // javaScriptConsole.removeChild(javaScriptConsole.firstChild);
-    // }
     var span = document.createElement('span')
     span.innerHTML = "<br>" + msg;
     javaScriptConsole.appendChild(span);
-    // this.logElement.scrollTop = 0;
     javaScriptConsole.scrollTop = javaScriptConsole.scrollHeight;
 }
 
 function logSuperColliderConsole(msg) {
-
+    if (msg.length > 0 && typeof msg === 'string' && msg !== null) {
+        let r = msg.match(/^\s*$/);
+        if (r === null) {
+            var span = document.createElement('span')
+            span.innerHTML = "<br>" + msg;
+            // span.innerHTML = msg;
+            superColliderConsole.appendChild(span);
+            superColliderConsole.scrollTop = superColliderConsole.scrollHeight;
+        }
+    }
 }

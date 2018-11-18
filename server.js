@@ -2,6 +2,22 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var url = require('url');
+var sc = require('supercolliderjs');
+var osc = require("osc");
+
+var udpPort = new osc.UDPPort({
+    // This is the port we're listening on.
+    localAddress: "127.0.0.1",
+    localPort: 57121,
+
+    // This is where sclang is listening for OSC messages.
+    remoteAddress: "127.0.0.1",
+    remotePort: 57120,
+    metadata: true
+});
+udpPort.open();
+
+var sclang;
 
 let indexFile = fs.readFileSync("index.html", { encoding: "utf8" });
 
@@ -150,6 +166,21 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+    socket.on('interpretSuperCollider', function(msg) {
+        if (sclang !== null) {
+            sclang.interpret(msg, null, true, true, false)
+                .then(function(result) {
+                    io.sockets.emit('toscdconsole', result);
+                    // console.log(result);
+                })
+                .catch(function(error) {
+                    var errorStringArray = JSON.stringify(error.error, null, ' ');
+                    io.sockets.emit('toscdconsole', errorStringArray + '\n\n\n');
+                    console.log("Is this happening?");
+                });
+        };
+    });
+
     socket.on('note', function(data) {
         var msg = {
             address: "/hello/from/oscjs",
@@ -159,7 +190,7 @@ io.sockets.on('connection', function(socket) {
             }]
         };
         // console.log("Sending message", msg.address, msg.args, "to", udpPort.options.remoteAddress + ":" + udpPort.options.remotePort);
-        // udpPort.send(msg);
+        udpPort.send(msg);
     });
 
     // socket.on('savePoints', function(data) {
@@ -176,6 +207,30 @@ io.sockets.on('connection', function(socket) {
     //     });
     // });
 });
+
+
+function startSclang() {
+    sc.lang.boot({ stdin: false, echo: false, debug: false }).then(function(lang) {
+        sclang = lang;
+        sclang.on('stdout', function(text) {
+            io.sockets.emit('toscdconsole', text);
+        });
+        sclang.on('state', function(text) {
+            io.sockets.emit('toscdconsole', JSON.stringify(text));
+        });
+        sclang.on('stderror', function(text) {
+            io.sockets.emit('toscdconsole', JSON.stringify(text));
+        });
+        sclang.on('error', function(text) {
+            io.sockets.emit('toscdconsole', JSON.stringify(text.error.errorString));
+        });
+    });
+    // sc.server.boot();
+}
+startSclang();
+
+
+
 
 function decodeBase64Image(dataString) {
     var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
