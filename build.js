@@ -1,31 +1,11 @@
 let fs = require("fs");
-// let blank = fs.readFileSync("blank.html", { encoding: "utf8" });
+let htmlContent = fs.readFileSync("structure.html", { encoding: "utf8" });
 
 let sketch = process.argv[2];
 let sketchJSON = fs.readFileSync("../" + sketch + "/les-environs.json", { encoding: "utf8" });
 sketchJSON = JSON.parse(sketchJSON);
 
 // console.log(sketchJSON);
-
-let header = `
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>${sketch}</title>
-`;
-
-let footer = `
-</head>
-
-<body>
-</body>
-
-</html>
-`;
-
-
 
 let headURLs = "";
 for (let i = 0; i < sketchJSON["javascript-files"].length; i++) {
@@ -36,12 +16,12 @@ for (let i = 0; i < sketchJSON["javascript-files"].length; i++) {
         if (err) {
             return console.error(err);
         } else {
-            console.log(fileURL + ' written successfully.');
+            // console.log(fileURL + ' written successfully.');
         }
     });
-    console.log(filePath);
+    // console.log(filePath);
 
-    headURLs += `<script src="${fileURL}" type="text/javascript"></script>`;
+    headURLs += `<script src="${fileURL}" type="text/javascript"></script>\n`;
 }
 
 for (let i = 0; i < sketchJSON["css-files"].length; i++) {
@@ -52,14 +32,23 @@ for (let i = 0; i < sketchJSON["css-files"].length; i++) {
         if (err) {
             return console.error(err);
         } else {
-            console.log(fileURL + ' written successfully.');
+            // console.log(fileURL + ' written successfully.');
         }
     });
-    headURLs += `<link rel="stylesheet" type="text/css" href="${fileURL}">`;
+    headURLs += `<link rel="stylesheet" type="text/css" href="${fileURL}">\n`;
 }
 
+htmlContent = htmlContent.replace(/<script src="client.js"/g, function(match) {
+    return headURLs + match;
+});
+// console.log(htmlContent);
+htmlContent = htmlContent.replace(/<title><\/title>/g, function(match) {
+    return `<title>${sketch}</title>`;
+});
 
-fs.writeFile('index.html', header + headURLs + footer, function(err) {
+
+
+fs.writeFile('index.html', htmlContent, function(err) {
     if (err) {
         return console.error(err);
     } else {
