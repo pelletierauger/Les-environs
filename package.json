@@ -1,0 +1,19 @@
+{
+  "name": "les-environs",
+  "version": "0.0.1",
+  "description": "A live coding machine for p5.js, GLSL, and SuperCollider.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pelletierauger/Les-environs.git"
+  },
+  "author": "Guillaume Pelletier-Auger",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/pelletierauger/Les-environs/issues"
+  },
+  "homepage": "https://github.com/pelletierauger/Les-environs#readme"
+}
