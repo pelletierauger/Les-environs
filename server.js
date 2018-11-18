@@ -2,7 +2,34 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var url = require('url');
-console.log(__dirname);
+
+let indexFile = fs.readFileSync("index.html", { encoding: "utf8" });
+
+let sketch;
+indexFile.replace(/<title>([\s\S]*?)<\/title>/, function(a, b, c) {
+    sketch = b;
+});
+// console.log("R!!!" + sketch);
+
+let sketchJSON = fs.readFileSync("../" + sketch + "/les-environs.json", { encoding: "utf8" });
+sketchJSON = JSON.parse(sketchJSON);
+// console.log(sketchJSON);
+
+let javaScriptFiles = [];
+for (let i = 0; i < sketchJSON["javascript-files"].length; i++) {
+    let filePath = sketchJSON["javascript-files"][i];
+    let file = fs.readFileSync("../" + sketch + "/" + filePath, { encoding: "utf8" });
+    javaScriptFiles.push({ name: filePath, content: file });
+}
+let superColliderFiles = [];
+for (let i = 0; i < sketchJSON["supercollider-files"].length; i++) {
+    let filePath = sketchJSON["supercollider-files"][i];
+    let file = fs.readFileSync("../" + sketch + "/" + filePath, { encoding: "utf8" });
+    superColliderFiles.push({ name: filePath, content: file });
+}
+let sketchFiles = [superColliderFiles, javaScriptFiles];
+
+// console.log(__dirname);
 // var osc = require("osc");
 
 // var udpPort = new osc.UDPPort({
@@ -32,7 +59,7 @@ function handleRequest(req, res) {
 
     var pathname = req.url;
 
-    console.log(pathname);
+    // console.log(pathname);
 
 
     var pathnametest = pathname;
@@ -89,8 +116,9 @@ var clients = {};
 io.sockets.on('connection', function(socket) {
     console.log("Client " + socket.id + " is connected.");
 
-    socket.on('pullJSONs', function() {
-        io.sockets.emit('pushJSONs', JSONs);
+    socket.on('pullFiles', function() {
+        io.sockets.emit('pushFiles', sketchFiles);
+        console.log("Pushing files.");
     });
 
     socket.on('mouse', function(data) {
