@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="node_modules/codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="style/codemirror.css">
+    <link rel="stylesheet" href="style/les-environs.css">
+    <link rel="stylesheet" href="style/client.css">
+    <script src="node_modules/codemirror/mode/javascript/javascript.js"></script>
+    <script src="style/sc.js"></script>
+    <script src="node_modules/codemirror/addon/edit/matchbrackets.js"></script>
+    <script src="node_modules/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="node_modules/codemirror/addon/comment/comment.js"></script>
+    <script src="node_modules/codemirror/addon/selection/active-line.js"></script>
+    <script src="node_modules/codemirror/addon/selection/mark-selection.js"></script>
+    <script src="node_modules/codemirror/addon/hint/javascript-hint.js"></script>
+    <script src="node_modules/codemirror/addon/hint/show-hint.js"></script>
+    <script src="client.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <textarea id="supercollider-editor">[0.5, 1, 2, 3].choose;</textarea>
+    <textarea id="supercollider-console" class="console">ooo</textarea>
+    <textarea id="javascript-editor">let tempcode = 10;</textarea>
+    <div id="javascript-console" class="console"><span>aaa</span></div>
+    <input type="text" id="appcontrol" spellcheck="false" />
+</body>
+
+</html>
