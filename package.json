@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/pelletierauger/Les-environs/issues"
   },
-  "homepage": "https://github.com/pelletierauger/Les-environs#readme"
+  "homepage": "https://github.com/pelletierauger/Les-environs#readme",
+  "dependencies": {
+    "codemirror": "^5.41.0"
+  }
 }
