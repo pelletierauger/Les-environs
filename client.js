@@ -13,7 +13,7 @@ function init() {
         matchBrackets: true,
         autofocus: true,
         styleActiveLine: true,
-        smartIndent: true,
+        smartIndent: false,
         indentWithTabs: false,
         indentUnit: 4,
         lineWrapping: true,
@@ -179,14 +179,22 @@ function init() {
     superColliderConsole = document.getElementById("supercollider-console");
     javaScriptConsole = document.getElementById("javascript-console");
 
-    appcontrol = window.document.getElementById("appcontrol");
-    appcontrol.addEventListener("keyup", function(event) {
+    appControl = window.document.getElementById("appcontrol");
+    appControl.addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
 
             interpretAppControl(appcontrol.value);
         }
     });
+
+    // window.setTimeout(function() {
+
+    //     superColliderEditor.getInputField().blur();
+    //     javaScriptEditor.cm.getInputField().blur();
+    //     appControl.focus();
+    // }, 10);
+
     keysActive = false;
     keysControl = document.getElementById("keys-active");
     keysControl.addEventListener("mouseenter", function(event) {
