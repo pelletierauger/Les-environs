@@ -38,7 +38,7 @@ for (let i = 0; i < sketchJSON["css-files"].length; i++) {
     headURLs += `<link rel="stylesheet" type="text/css" href="${fileURL}">\n`;
 }
 
-htmlContent = htmlContent.replace(/<script src="client.js"/g, function(match) {
+htmlContent = htmlContent.replace(/<script src="editor-class.js"/g, function(match) {
     return headURLs + match;
 });
 // console.log(htmlContent);

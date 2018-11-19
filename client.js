@@ -1,6 +1,6 @@
 // var socket;
 let files;
-let appControl;
+let appControl, keysControl;
 let superColliderEditor, javaScriptEditor;
 let superColliderConsole, javaScriptConsole;
 window.onload = init;
@@ -13,17 +13,14 @@ function init() {
         matchBrackets: true,
         autofocus: true,
         styleActiveLine: true,
-        smartIndent: false,
+        smartIndent: true,
         indentWithTabs: false,
+        indentUnit: 4,
         lineWrapping: true,
         theme: "les-environs",
         autoCloseBrackets: true,
         scrollbarStyle: "null",
-        styleSelectedText: true,
-        extraKeys: {
-            Tab: (cm) => cm.execCommand("indentMore"),
-            "Shift-Tab": (cm) => cm.execCommand("indentLess"),
-        },
+        styleSelectedText: true
     });
 
     var curWord = "";
@@ -72,26 +69,32 @@ function init() {
             }
         }
     });
+
     superColliderEditor.setOption("extraKeys", {
         'Cmd-Enter': function() { runsel(); },
         'Cmd-.': function() { interpret('CmdPeriod.run;'); },
-        'Cmd-/': "toggleComment"
+        'Cmd-Alt-/': "toggleComment",
+        'Shift-Enter': function() { runLine(); },
+        Tab: (cm) => cm.execCommand("indentMore"),
+        "Shift-Tab": (cm) => cm.execCommand("indentLess"),
+        'Cmd-Alt-0': (cm) => cm.execCommand("indentMore"),
+        'Cmd-Alt-9': (cm) => cm.execCommand("indentLess")
     });
 
-
-
     function interpret(data) {
-        // $.ajax({ method: "POST", url: '/interpret', data: { code: data } });
         socket.emit('interpretSuperCollider', data);
     }
 
-    // function runtemp(data) {
-    //     // $.ajax({ method: "POST", url: '/runtemp', data: { code: data } });
-    // }
+    function runLine() {
+        var curLine = superColliderEditor.getCursor().line;
+        let line = String(superColliderEditor.getLine(curLine));
+        socket.emit('interpretSuperCollider', line);
+    }
 
     function runsel() {
         var selection = superColliderEditor.getSelection();
-        if (selection !== '') {
+        let nonEmptySelection = selection.match(/.*?/g);
+        if (selection !== '' && nonEmptySelection[0]) {
             interpret(selection);
         } else {
 
@@ -127,8 +130,6 @@ function init() {
                         countBracketsClose -= 1;
                     }
                 }
-
-
             }
 
             lineNow = lineRem;
@@ -147,34 +148,24 @@ function init() {
                     codeBracket += String(superColliderEditor.getLine(lineNow));
                     lineNow += 1;
                 }
-                interpret(codeBracket);
+                // This transforms all single line comments into multi line comments
+                // so that they work with the interpreter.
+                // let r = /(\/{2})(.*?)(\s{4})/g;
+                let r = /(\/{2})(\s+)(.*?)(\s{4}|\/{2})/g;
+                let fixedComments = codeBracket.replace(r, function(a, b, c, d) {
+                    return "/*" + d + "*/";
+                });
+                console.log(fixedComments);
+                interpret(fixedComments);
             } else {
                 interpret(superColliderEditor.getLine(superColliderEditor.getCursor().line));
             }
         }
     };
 
+    javaScriptEditor = new EditorClass();
+    window.P5 = P5;
 
-
-    var javaScriptEditorContainer = document.getElementById("javascript-editor");
-    javaScriptEditor = CodeMirror.fromTextArea(javaScriptEditorContainer, {
-        lineNumbers: false,
-        mode: "javascript",
-        matchBrackets: true,
-        autofocus: true,
-        styleActiveLine: true,
-        smartIndent: false,
-        indentWithTabs: false,
-        lineWrapping: true,
-        theme: "les-environs",
-        autoCloseBrackets: true,
-        scrollbarStyle: "null",
-        styleSelectedText: true,
-        extraKeys: {
-            Tab: (cm) => cm.execCommand("indentMore"),
-            "Shift-Tab": (cm) => cm.execCommand("indentLess"),
-        },
-    });
     // socket = io.connect('http://localhost:8080');
     socket.on('pushFiles', function(data) {
         files = data;
@@ -188,7 +179,6 @@ function init() {
     superColliderConsole = document.getElementById("supercollider-console");
     javaScriptConsole = document.getElementById("javascript-console");
 
-
     appcontrol = window.document.getElementById("appcontrol");
     appcontrol.addEventListener("keyup", function(event) {
         event.preventDefault();
@@ -197,6 +187,20 @@ function init() {
             interpretAppControl(appcontrol.value);
         }
     });
+    keysActive = false;
+    keysControl = document.getElementById("keys-active");
+    keysControl.addEventListener("mouseenter", function(event) {
+        keysActive = true;
+        superColliderEditor.setOption("readOnly", keysActive);
+        javaScriptEditor.cm.setOption("readOnly", keysActive);
+        // console.log("Enter the zone!");
+    }, false);
+    keysControl.addEventListener("mouseleave", function(event) {
+        keysActive = false;
+        superColliderEditor.setOption("readOnly", keysActive);
+        javaScriptEditor.cm.setOption("readOnly", keysActive);
+        // console.log("Leave the zone!");
+    }, false);
 }
 
 function interpretAppControl(value) {
@@ -219,6 +223,9 @@ function interpretAppControl(value) {
         while (javaScriptConsole.firstChild) {
             javaScriptConsole.removeChild(javaScriptConsole.firstChild);
         }
+        while (superColliderConsole.firstChild) {
+            superColliderConsole.removeChild(superColliderConsole.firstChild);
+        }
         return;
     }
     // value.replace(/(load\s)([\s\S]*?)/, function(a, b, c) {
@@ -240,7 +247,7 @@ function interpretAppControl(value) {
         }
         for (let i = 0; i < files[1].length; i++) {
             if (files[1][i].name == match[2]) {
-                javaScriptEditor.setValue(files[1][i].content);
+                javaScriptEditor.cm.setValue(files[1][i].content);
                 matchedFile = true;
             }
         }
