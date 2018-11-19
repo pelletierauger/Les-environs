@@ -1,7 +1,9 @@
 // This code is largely taken from Hydra, a live coding software written by Olivia Jack.
 // Hydra is free software licensed under the GNU Affero General Public License v3.0.
 // https://github.com/ojack/hydra
-// The license can be found here : https://github.com/ojack/hydra/blob/master/LICENSE
+// The license can be found here: https://github.com/ojack/hydra/blob/master/LICENSE
+// The code below is adapted from this specific file in Hydra: 
+// https://github.com/ojack/hydra/blob/master/hydra-server/app/src/editor.js
 
 var isShowing = true;
 
@@ -34,10 +36,13 @@ var EditorClass = function() {
         theme: 'les-environs',
         value: 'hello',
         mode: { name: 'javascript', globalVars: true },
+        matchBrackets: true,
+        autofocus: true,
         smartIndent: true,
         indentWithTabs: false,
         indentUnit: 4,
         lineWrapping: true,
+        autoCloseBrackets: true,
         scrollbarStyle: "null",
         styleSelectedText: true,
         hintOptions: { globalScope: {} },
@@ -73,8 +78,8 @@ var EditorClass = function() {
             },
             'Cmd-Enter': (instance) => {
                 var text = self.selectCurrentBlock(instance)
-                console.log('text', text)
-                self.eval(text.text)
+                // console.log('text', text);
+                self.eval(text.text);
             },
             Tab: (cm) => cm.execCommand("indentMore"),
             "Shift-Tab": (cm) => cm.execCommand("indentLess"),
