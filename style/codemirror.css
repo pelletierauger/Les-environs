@@ -58,6 +58,9 @@
 
 
 
+
+
+
 /* Shown when moving in bi-directional text */
 
 .CodeMirror div.CodeMirror-secondarycursor {
@@ -115,6 +118,9 @@
 
 
 
+
+
+
 /* Can style cursor different in overwrite (non-insert) mode */
 
 .CodeMirror-overwrite .CodeMirror-cursor {}
@@ -138,6 +144,9 @@
     bottom: 0;
     position: absolute;
 }
+
+
+
 
 
 
@@ -275,6 +284,9 @@
 
 
 
+
+
+
 /* Default styles for common addons */
 
 div.CodeMirror span.CodeMirror-matchingbracket {
@@ -289,6 +301,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 .CodeMirror-activeline-background {
     background: #e8f2ff;
 }
+
+
+
 
 
 
@@ -349,6 +364,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
     position: relative;
     border-right: 30px solid transparent;
 }
+
+
+
 
 
 
@@ -474,6 +492,10 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
     -webkit-font-variant-ligatures: contextual;
     font-variant-ligatures: contextual;
 }
+.CodeMirror pre ul li {
+    width: 50px;
+    height: 12.5px;
+}
 .CodeMirror-wrap pre {
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -505,6 +527,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 .CodeMirror-code {
     outline: none;
 }
+
+
+
 
 
 
@@ -629,6 +654,9 @@ div.CodeMirror-dragcursors {
 
 
 
+
+
+
 /* Used to force a border model for a node */
 
 .cm-force-border {
@@ -672,11 +700,17 @@ div.CodeMirror-dragcursors {
 
 
 
+
+
+
 /* See issue #2901 */
 
 .cm-tab-wrap-hack:after {
     content: '';
 }
+
+
+
 
 
 
