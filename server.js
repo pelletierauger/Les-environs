@@ -56,7 +56,10 @@ function gatherFiles() {
         }
     }
     sketchIndex.replace(/(src=")(.*?)(")/g, function(a, b, c) {
-        if (!c.match(/libraries/g) && !c.match(/frame-export/g)) {
+        if (!c.match(/libraries/g) &&
+            !c.match(/frame-export/g) &&
+            !c.match(/http/g)
+        ) {
             files.js.push({
                 name: c,
                 path: sketchFolder + "/" + c
@@ -135,11 +138,11 @@ function handleRequest(req, res) {
         let injecting = pathname;
         injecting = injecting.replace(/les-environs\//g, "");
         pathname = config.pathToSketches + "Les-environs" + injecting;
-    } else {
+    } else if (!pathname.match(/http/g)) {
         pathname = config.pathToSketches + sketchName + pathname;
     }
 
-    console.log("The pathname is : " + pathname);
+    // console.log("The pathname is : " + pathname);
 
 
 
@@ -161,7 +164,6 @@ function handleRequest(req, res) {
             res.writeHead(500);
             return res.end('Error loading ' + pathname);
         }
-        console.log("IS THIS NOT WORKING ???");
         // Dynamically setting content type
         res.writeHead(200, { 'Content-Type': contentType });
         res.end(data);
