@@ -242,7 +242,7 @@ function interpretAppControl(value) {
         }
         return;
     }
-    var loadTest = /(load\s|l\s)([\s\S]*)/;
+    var loadTest = /(^load\s|^l\s)([\s\S]*)/;
     var loadMatch = loadTest.exec(value);
     if (loadMatch) {
         console.log("match : " + loadMatch[2]); // abc
@@ -267,7 +267,7 @@ function interpretAppControl(value) {
             return;
         }
     }
-    var saveTest = /(save\s|s\s)([\s\S]*)/;
+    var saveTest = /(^save\s|^s\s)([\s\S]*)/;
     var saveMatch = saveTest.exec(value);
     if (saveMatch) {
         console.log("match : " + saveMatch[2]); // abc
