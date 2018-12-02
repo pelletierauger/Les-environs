@@ -98,6 +98,7 @@ canvas {
 
 #appcontrol {
     /*display: block;*/
+    z-index: 10;
     display: inline-block;
     /*margin: auto;*/
     /*float: left;*/

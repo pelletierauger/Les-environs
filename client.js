@@ -3,6 +3,10 @@ let files;
 let appControl, keysControl;
 let superColliderEditor, javaScriptEditor;
 let superColliderConsole, javaScriptConsole;
+let currentLoadedFiles = {
+    scd: null,
+    js: null
+};
 window.onload = init;
 
 function init() {
@@ -171,6 +175,9 @@ function init() {
         files = data;
     });
     socket.emit('pullFiles', "");
+    socket.on('pushMessage', function(data) {
+        logJavaScriptConsole(data);
+    });
 
     socket.on('toscdconsole', function(data) {
         logSuperColliderConsole(data);
@@ -212,17 +219,16 @@ function init() {
 }
 
 function interpretAppControl(value) {
-    // console.log(value);
     if (value === "ls") {
         console.log("whoa!");
         let allFiles = "";
-        for (let i = 0; i < files[0].length; i++) {
+        for (let i = 0; i < files.scd.length; i++) {
             let comma = ", ";
-            allFiles += files[0][i].name + comma;
+            allFiles += files.scd[i].name + comma;
         }
-        for (let i = 0; i < files[1].length; i++) {
-            let comma = (i < files[1].length - 1) ? ", " : "";
-            allFiles += files[1][i].name + comma;
+        for (let i = 0; i < files.js.length; i++) {
+            let comma = (i < files.js.length - 1) ? ", " : "";
+            allFiles += files.js[i].name + comma;
         }
         logJavaScriptConsole(allFiles);
         return;
@@ -236,27 +242,54 @@ function interpretAppControl(value) {
         }
         return;
     }
-    // value.replace(/(load\s)([\s\S]*?)/, function(a, b, c) {
-    //     console.log(c);
-    // });
-    // var myString = "something format_abc";
-    // ([\s\S]*?)
-    var myRegexp = /(load\s)([\s\S]*)/;
-    var match = myRegexp.exec(value);
-    if (match) {
-        // console.log("there was a match!");
-        console.log("match : " + match[2]); // abc
+    var loadTest = /(load\s|l\s)([\s\S]*)/;
+    var loadMatch = loadTest.exec(value);
+    if (loadMatch) {
+        console.log("match : " + loadMatch[2]); // abc
         let matchedFile = false;
-        for (let i = 0; i < files[0].length; i++) {
-            if (files[0][i].name == match[2]) {
-                superColliderEditor.setValue(files[0][i].content);
+        for (let i = 0; i < files.scd.length; i++) {
+            if (files.scd[i].name == loadMatch[2]) {
+                superColliderEditor.setValue(files.scd[i].data);
+                currentLoadedFiles.scd = files.scd[i].name;
                 matchedFile = true;
             }
         }
-        for (let i = 0; i < files[1].length; i++) {
-            if (files[1][i].name == match[2]) {
-                javaScriptEditor.cm.setValue(files[1][i].content);
+        if (!matchedFile) {
+            for (let i = 0; i < files.js.length; i++) {
+                if (files.js[i].name == loadMatch[2]) {
+                    javaScriptEditor.cm.setValue(files.js[i].data);
+                    currentLoadedFiles.js = files.js[i].name;
+                    matchedFile = true;
+                }
+            }
+        }
+        if (matchedFile) {
+            return;
+        }
+    }
+    var saveTest = /(save\s|s\s)([\s\S]*)/;
+    var saveMatch = saveTest.exec(value);
+    if (saveMatch) {
+        console.log("match : " + saveMatch[2]); // abc
+        let matchedFile = false;
+        for (let i = 0; i < files.scd.length; i++) {
+            if (files.scd[i].name == saveMatch[2]) {
+                files.scd[i].data = superColliderEditor.getValue();
+                socket.emit('saveFile', files.scd[i]);
+                // superColliderEditor.setValue(files.scd[i].data);
+                // currentLoadedFiles.scd = files.scd[i].name;
                 matchedFile = true;
+            }
+        }
+        if (!matchedFile) {
+            for (let i = 0; i < files.js.length; i++) {
+                if (files.js[i].name == saveMatch[2]) {
+                    files.js[i].data = javaScriptEditor.cm.getValue();
+                    socket.emit('saveFile', files.js[i]);
+                    // javaScriptEditor.cm.setValue(files.js[i].data);
+                    // currentLoadedFiles.js = files.js[i].name;
+                    matchedFile = true;
+                }
             }
         }
         if (matchedFile) {

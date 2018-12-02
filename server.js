@@ -4,6 +4,76 @@ var fs = require('fs');
 var url = require('url');
 var sc = require('supercolliderjs');
 var osc = require("osc");
+var config = require("./config.js");
+var htmlSources = {
+    head: fs.readFileSync("html/head.html", { encoding: "utf8" }),
+    body: fs.readFileSync("html/body.html", { encoding: "utf8" }),
+};
+
+let sketchFolder, sketchName, sketchIndex;
+
+if (!process.argv[2]) {
+    console.log("A sketch name must be provided.");
+    return;
+} else {
+    sketchName = process.argv[2];
+    sketchFolder = config.pathToSketches + sketchName;
+    if (fs.existsSync(sketchFolder)) {
+        console.log(`The sketch '${sketchName}' exists.`);
+        // console.log(sketchFolder);
+        sketchIndex = fs.readFileSync(sketchFolder + "/index.html", { encoding: "utf8" });
+    } else {
+        console.log(`The sketch '${sketchName}' does not exist.`);
+        return;
+    }
+}
+
+let environsIndex = sketchIndex;
+environsIndex = environsIndex.replace(/<\/head>/g, `${htmlSources.head}
+</head>`);
+environsIndex = environsIndex.replace(/<\/body>/g, `${htmlSources.body}
+</body>`);
+
+// console.log(environsIndex);
+// return;
+
+// I now need to scrape all the files that might be used during live coding.
+
+let files;
+
+function gatherFiles() {
+    let files = {
+        scd: [],
+        js: []
+    };
+    if (fs.existsSync(sketchFolder + "/SuperCollider")) {
+        files.scd = fs.readdirSync(sketchFolder + "/SuperCollider");
+        for (let i = 0; i < files.scd.length; i++) {
+            files.scd[i] = {
+                name: files.scd[i],
+                path: sketchFolder + "/SuperCollider/" + files.scd[i]
+            };
+        }
+    }
+    sketchIndex.replace(/(src=")(.*?)(")/g, function(a, b, c) {
+        if (!c.match(/libraries/g) && !c.match(/frame-export/g)) {
+            files.js.push({
+                name: c,
+                path: sketchFolder + "/" + c
+            });
+        }
+    });
+
+
+    for (let i = 0; i < files.scd.length; i++) {
+        files.scd[i].data = fs.readFileSync(files.scd[i].path, { encoding: "utf8" });
+    }
+    for (let i = 0; i < files.js.length; i++) {
+        files.js[i].data = fs.readFileSync(files.js[i].path, { encoding: "utf8" });
+    }
+    return files;
+}
+
 
 var udpPort = new osc.UDPPort({
     // This is the port we're listening on.
@@ -18,49 +88,6 @@ var udpPort = new osc.UDPPort({
 udpPort.open();
 
 var sclang;
-
-let indexFile = fs.readFileSync("index.html", { encoding: "utf8" });
-
-let sketch;
-indexFile.replace(/<title>([\s\S]*?)<\/title>/, function(a, b, c) {
-    sketch = b;
-});
-// console.log("R!!!" + sketch);
-
-let sketchJSON = fs.readFileSync("../" + sketch + "/les-environs.json", { encoding: "utf8" });
-sketchJSON = JSON.parse(sketchJSON);
-// console.log(sketchJSON);
-
-let javaScriptFiles = [];
-for (let i = 0; i < sketchJSON["javascript-files"].length; i++) {
-    let filePath = sketchJSON["javascript-files"][i];
-    let file = fs.readFileSync("../" + sketch + "/" + filePath, { encoding: "utf8" });
-    javaScriptFiles.push({ name: filePath, content: file });
-}
-let superColliderFiles = [];
-for (let i = 0; i < sketchJSON["supercollider-files"].length; i++) {
-    let filePath = sketchJSON["supercollider-files"][i];
-    let file = fs.readFileSync("../" + sketch + "/" + filePath, { encoding: "utf8" });
-    superColliderFiles.push({ name: filePath, content: file });
-}
-let sketchFiles = [superColliderFiles, javaScriptFiles];
-
-// console.log(__dirname);
-// var osc = require("osc");
-
-// var udpPort = new osc.UDPPort({
-//     // This is the port we're listening on.
-//     localAddress: "127.0.0.1",
-//     localPort: 57121,
-
-//     // This is where sclang is listening for OSC messages.
-//     remoteAddress: "127.0.0.1",
-//     remotePort: 57120,
-//     metadata: true
-// });
-
-// // Open the socket.
-// udpPort.open();
 
 function handleRequest(req, res) {
     // console.log(req.url);
@@ -92,9 +119,30 @@ function handleRequest(req, res) {
 
     // console.log(query);
     // If blank let's ask for index.html
+
+    // If the path is empty, we return the injected sketch.
     if (pathname == '/') {
-        pathname = '/index.html';
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(environsIndex);
+        return;
+        // pathname = '/index.html';
     }
+
+    // If the path non-empty, we check whether it relates to Les environs
+
+    var testEnvirons = /les-environs\//g;
+    if (pathname.match(testEnvirons)) {
+        let injecting = pathname;
+        injecting = injecting.replace(/les-environs\//g, "");
+        pathname = config.pathToSketches + "Les-environs" + injecting;
+    } else {
+        pathname = config.pathToSketches + sketchName + pathname;
+    }
+
+    console.log("The pathname is : " + pathname);
+
+
+
     // Ok what's our file extension
     var ext = path.extname(pathname);
     // Map extension to file type
@@ -107,11 +155,13 @@ function handleRequest(req, res) {
     //What is it?  Default to plain text
     var contentType = typeExt[ext] || 'text/plain';
     // Now read and write back the file with the appropriate content type
-    fs.readFile(__dirname + pathname, function(err, data) {
+    // fs.readFile(__dirname + pathname, function(err, data) {
+    fs.readFile(pathname, function(err, data) {
         if (err) {
             res.writeHead(500);
             return res.end('Error loading ' + pathname);
         }
+        console.log("IS THIS NOT WORKING ???");
         // Dynamically setting content type
         res.writeHead(200, { 'Content-Type': contentType });
         res.end(data);
@@ -131,11 +181,17 @@ var clients = {};
 
 io.sockets.on('connection', function(socket) {
     console.log("Client " + socket.id + " is connected.");
+    files = gatherFiles();
 
     socket.on('pullFiles', function() {
-        io.sockets.emit('pushFiles', sketchFiles);
+        io.sockets.emit('pushFiles', files);
         console.log("Pushing files.");
     });
+
+    // socket.on('pullMessage', function() {
+    //     io.sockets.emit('pushMessage', files);
+    //     // console.log("Pushing files.");
+    // });
 
     socket.on('mouse', function(data) {
         // Data comes in as whatever was sent, including objects
@@ -206,6 +262,20 @@ io.sockets.on('connection', function(socket) {
     //         }
     //     });
     // });
+    socket.on('saveFile', function(file) {
+        // console.log(data);
+        // data = JSON.stringify(data);
+        // var fileName = filenameFormatter(Date());
+        // fileName = fileName.slice(0, fileName.length - 13);
+        fs.writeFile(file.path, file.data, function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                console.log(file.path + ' written successfully.');
+                io.sockets.emit('pushMessage', file.path + ' written successfully.');
+            }
+        });
+    });
 });
 
 
