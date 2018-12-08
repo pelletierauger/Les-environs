@@ -132,6 +132,11 @@ EditorClass.prototype.eval = function(arg, callback) {
     var isError = false
     try {
         eval(jsString);
+        for (let i = 0; i < files.js.length; i++) {
+            if (files.js[i].active) {
+                files.js[i].data = this.cm.getValue();
+            }
+        }
         // self.log(jsString);
         logJavaScriptConsole(jsString);
     } catch (e) {

@@ -87,6 +87,11 @@ function init() {
 
     function interpret(data) {
         socket.emit('interpretSuperCollider', data);
+        for (let i = 0; i < files.scd.length; i++) {
+            if (files.scd[i].active) {
+                files.scd[i].data = superColliderEditor.getValue();
+            }
+        }
     }
 
     function runLine() {
@@ -173,6 +178,7 @@ function init() {
     // socket = io.connect('http://localhost:8080');
     socket.on('pushFiles', function(data) {
         files = data;
+        createTabs(files);
     });
     socket.emit('pullFiles', "");
     socket.on('pushMessage', function(data) {
@@ -326,3 +332,65 @@ function logSuperColliderConsole(msg) {
         }
     }
 }
+
+function createTabs(f) {
+    for (let i = 0; i <  f.scd.length; i++) {
+        let tab = new Tab(f.scd[i], "scd");
+    }
+    for (let i = 0; i <  f.js.length; i++) {
+        let tab = new Tab(f.js[i], "js");
+    }
+}
+
+let Tab = function(file, type) {
+    this.name = file.name;
+    this.active = file.active;
+    this.type = type;
+    console.log(type);
+
+
+    this.div = document.createElement('div');
+    this.div.className = "file";
+    this.div.innerText = this.name;
+    let that = this;
+
+    if (this.type == "scd") {
+        this.div.onclick = function() {
+            for (let i = 0; i < files.scd.length; i++) {
+                if (files.scd[i].name == that.name) {
+                    superColliderEditor.setValue(files.scd[i].data);
+                    currentLoadedFiles.scd = files.scd[i].name;
+                    for (let j = 0; j < files.scd.length; j++) {
+                        files.scd[j].active = false;
+                    }
+                    files.scd[i].active = true;
+                    matchedFile = true;
+                }
+            }
+        };
+    } else if (this.type == "js") {
+        this.div.onclick = function() {
+            for (let i = 0; i < files.js.length; i++) {
+                if (files.js[i].name == that.name) {
+                    javaScriptEditor.cm.setValue(files.js[i].data);
+                    currentLoadedFiles.js = files.js[i].name;
+                    for (let j = 0; j < files.js.length; j++) {
+                        files.js[j].active = false;
+                    }
+                    files.js[i].active = true;
+                    matchedFile = true;
+                }
+            }
+        };
+    }
+
+    // document.getElementsByTagName('body')[0].appendChild(this.div);
+
+    // Now create and append to iDiv
+    let innerDivName = (this.type == "scd") ? "scd-files" : "js-files";
+    let innerDiv = document.getElementById(innerDivName);
+    // innerDiv.className = 'block-2';
+
+    // The variable iDiv is still good... Just append to it.
+    innerDiv.appendChild(this.div);
+};
