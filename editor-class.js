@@ -97,6 +97,18 @@ var EditorClass = function() {
     // document.body.appendChild(this.logElement)
     // this.log("hi");
 
+    this.cm.on("scroll", function() {
+        // console.log(javaScriptEditor.cm.getScrollInfo().top);
+        files.js[activeJs].scrollHeight = javaScriptEditor.cm.getScrollInfo().top;
+    });
+
+    this.cm.on("inputRead", function() {
+        // console.log(javaScriptEditor.cm.getScrollInfo().top);
+        if (files.js[activeJs]) {
+            // files.js[activeJs].scrollHeight = javaScriptEditor.cm.getScrollInfo().top;
+            files.js[activeJs].data = javaScriptEditor.cm.getValue();
+        }
+    });
 
     // TO DO: add show code param
     let searchParams = new URLSearchParams(window.location.search)
@@ -132,11 +144,11 @@ EditorClass.prototype.eval = function(arg, callback) {
     var isError = false
     try {
         eval(jsString);
-        for (let i = 0; i < files.js.length; i++) {
-            if (files.js[i].active) {
-                files.js[i].data = this.cm.getValue();
-            }
-        }
+        // for (let i = 0; i < files.js.length; i++) {
+        //     if (files.js[i].active) {
+        //         files.js[i].data = this.cm.getValue();
+        //     }
+        // }
         // self.log(jsString);
         logJavaScriptConsole(jsString);
     } catch (e) {

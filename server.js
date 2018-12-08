@@ -52,7 +52,8 @@ function gatherFiles() {
             files.scd[i] = {
                 name: files.scd[i],
                 path: sketchFolder + "/SuperCollider/" + files.scd[i],
-                active: false
+                active: false,
+                scrollHeight: 0
             };
         }
     }
@@ -61,10 +62,11 @@ function gatherFiles() {
             !c.match(/frame-export/g) &&
             !c.match(/http/g)
         ) {
-            files.js.push({
+            files.js.unshift({
                 name: c,
                 path: sketchFolder + "/" + c,
-                active: false
+                active: false,
+                scrollHeight: 0
             });
         }
     });

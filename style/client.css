@@ -200,11 +200,19 @@ canvas {
 .file {
     display: block;
     float: left;
-    background-color: #E5E5E5;
+
     margin-right: 5px;
     padding: 0px 8px;
 }
 
 .file:hover {
     cursor: pointer;
+}
+
+#active-tab {
+    background-color: #959595;
+}
+
+#inactive-tab {
+    background-color: #E5E5E5;
 }

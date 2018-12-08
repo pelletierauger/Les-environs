@@ -1,5 +1,9 @@
 // var socket;
 let files;
+let scdTabs = [];
+let jsTabs = [];
+let activeScd = null;
+let activeJs = null;
 let appControl, keysControl;
 let superColliderEditor, javaScriptEditor;
 let superColliderConsole, javaScriptConsole;
@@ -74,6 +78,16 @@ function init() {
         }
     });
 
+    superColliderEditor.on("scroll", function() {
+        files.scd[activeScd].scrollHeight = superColliderEditor.getScrollInfo().top;
+    });
+
+    superColliderEditor.on("inputRead", function() {
+        if (files.scd[activeScd]) {
+            files.scd[activeScd].data = superColliderEditor.getValue();
+        }
+    });
+
     superColliderEditor.setOption("extraKeys", {
         'Cmd-Enter': function() { runsel(); },
         'Cmd-.': function() { interpret('CmdPeriod.run;'); },
@@ -87,11 +101,11 @@ function init() {
 
     function interpret(data) {
         socket.emit('interpretSuperCollider', data);
-        for (let i = 0; i < files.scd.length; i++) {
-            if (files.scd[i].active) {
-                files.scd[i].data = superColliderEditor.getValue();
-            }
-        }
+        // for (let i = 0; i < files.scd.length; i++) {
+        //     if (files.scd[i].active) {
+        //         files.scd[i].data = superColliderEditor.getValue();
+        //     }
+        // }
     }
 
     function runLine() {
@@ -261,6 +275,7 @@ function interpretAppControl(value) {
                     files.scd[j].active = false;
                 }
                 files.scd[i].active = true;
+                activeScd = i;
                 matchedFile = true;
             }
         }
@@ -273,6 +288,7 @@ function interpretAppControl(value) {
                         files.js[j].active = false;
                     }
                     files.js[i].active = true;
+                    activeJs = i;
                     matchedFile = true;
                 }
             }
@@ -351,33 +367,54 @@ let Tab = function(file, type) {
 
     this.div = document.createElement('div');
     this.div.className = "file";
+    this.div.id = "inactive-tab";
     this.div.innerText = this.name;
     let that = this;
 
     if (this.type == "scd") {
+        scdTabs.push(this);
         this.div.onclick = function() {
             for (let i = 0; i < files.scd.length; i++) {
                 if (files.scd[i].name == that.name) {
                     superColliderEditor.setValue(files.scd[i].data);
+                    superColliderEditor.scrollTo(0, files.scd[i].scrollHeight);
                     currentLoadedFiles.scd = files.scd[i].name;
                     for (let j = 0; j < files.scd.length; j++) {
                         files.scd[j].active = false;
                     }
                     files.scd[i].active = true;
+                    activeScd = i;
+                    for (let k = 0; k <  scdTabs.length; k++) {
+                        if (scdTabs[k].name == that.name) {
+                            scdTabs[k].div.id = "active-tab";
+                        } else {
+                            scdTabs[k].div.id = "inactive-tab";
+                        }
+                    }
                     matchedFile = true;
                 }
             }
         };
     } else if (this.type == "js") {
+        jsTabs.push(this);
         this.div.onclick = function() {
             for (let i = 0; i < files.js.length; i++) {
                 if (files.js[i].name == that.name) {
                     javaScriptEditor.cm.setValue(files.js[i].data);
+                    javaScriptEditor.cm.scrollTo(0, files.js[i].scrollHeight);
                     currentLoadedFiles.js = files.js[i].name;
                     for (let j = 0; j < files.js.length; j++) {
                         files.js[j].active = false;
                     }
                     files.js[i].active = true;
+                    activeJs = i;
+                    for (let k = 0; k <  jsTabs.length; k++) {
+                        if (jsTabs[k].name == that.name) {
+                            jsTabs[k].div.id = "active-tab";
+                        } else {
+                            jsTabs[k].div.id = "inactive-tab";
+                        }
+                    }
                     matchedFile = true;
                 }
             }
