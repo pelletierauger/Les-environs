@@ -251,6 +251,10 @@ function interpretAppControl(value) {
             if (files.scd[i].name == loadMatch[2]) {
                 superColliderEditor.setValue(files.scd[i].data);
                 currentLoadedFiles.scd = files.scd[i].name;
+                for (let j = 0; j < files.scd.length; j++) {
+                    files.scd[j].active = false;
+                }
+                files.scd[i].active = true;
                 matchedFile = true;
             }
         }
@@ -259,6 +263,10 @@ function interpretAppControl(value) {
                 if (files.js[i].name == loadMatch[2]) {
                     javaScriptEditor.cm.setValue(files.js[i].data);
                     currentLoadedFiles.js = files.js[i].name;
+                    for (let j = 0; j < files.js.length; j++) {
+                        files.js[j].active = false;
+                    }
+                    files.js[i].active = true;
                     matchedFile = true;
                 }
             }

@@ -117,6 +117,7 @@ canvas {
     outline: none;
     background-color: #E5E5E5;
     border: 1px #E5E5E5 solid;
+    /*border: 0px;*/
     border-radius: 0px;
     transition: none;
     cursor: unset;
@@ -149,4 +150,61 @@ canvas {
     width: 50px;
     height: 50px;
     background: red;
+}
+
+#file-tabs {
+    /*display: block;*/
+    z-index: 10;
+    display: inline-block;
+    /*margin: auto;*/
+    /*float: left;*/
+    position: fixed;
+    bottom: 10px;
+    left: 430px;
+    /*position: absolute;*/
+    width: 400px;
+    /*top: 0;*/
+    /*left: 20;*/
+    /*bottom: 10;*/
+    /*right: 0;*/
+    line-height: 1;
+    font-family: "Inconsolata";
+    margin: 0;
+    font-size: 16px;
+    padding: 0px;
+    outline: none;
+
+    /*border: 1px #E5E5E5 solid;*/
+    border-radius: 0px;
+    transition: none;
+    /*cursor: unset;*/
+    text-align: left;
+}
+
+#scd-files, #js-files {
+    display: block;
+    float: left;
+    width: 100%;
+    /*height: 57px;*/
+    font-family: "Inconsolata";
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+}
+
+#scd-files {
+    /*background: yellow;*/
+    margin-bottom: 2px;
+}
+
+.file {
+    display: block;
+    float: left;
+    background-color: #E5E5E5;
+    margin-right: 5px;
+    padding: 0px 8px;
+}
+
+.file:hover {
+    cursor: pointer;
 }
