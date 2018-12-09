@@ -87,6 +87,16 @@ function init() {
             files.scd[activeScd].data = superColliderEditor.getValue();
         }
     });
+    superColliderEditor.on("keyHandled", function() {
+        if (files.scd[activeScd]) {
+            files.scd[activeScd].data = superColliderEditor.getValue();
+        }
+    });
+    superColliderEditor.on("clear", function() {
+        if (files.scd[activeScd]) {
+            files.scd[activeScd].data = superColliderEditor.getValue();
+        }
+    });
 
     superColliderEditor.setOption("extraKeys", {
         'Cmd-Enter': function() { runsel(); },
@@ -342,7 +352,6 @@ function logSuperColliderConsole(msg) {
         if (r === null) {
             var span = document.createElement('span')
             span.innerHTML = "<br>" + msg;
-            // span.innerHTML = msg;
             superColliderConsole.appendChild(span);
             superColliderConsole.scrollTop = superColliderConsole.scrollHeight;
         }
@@ -362,15 +371,11 @@ let Tab = function(file, type) {
     this.name = file.name;
     this.active = file.active;
     this.type = type;
-    console.log(type);
-
-
     this.div = document.createElement('div');
     this.div.className = "file";
     this.div.id = "inactive-tab";
     this.div.innerText = this.name;
     let that = this;
-
     if (this.type == "scd") {
         scdTabs.push(this);
         this.div.onclick = function() {
@@ -420,14 +425,7 @@ let Tab = function(file, type) {
             }
         };
     }
-
-    // document.getElementsByTagName('body')[0].appendChild(this.div);
-
-    // Now create and append to iDiv
     let innerDivName = (this.type == "scd") ? "scd-files" : "js-files";
     let innerDiv = document.getElementById(innerDivName);
-    // innerDiv.className = 'block-2';
-
-    // The variable iDiv is still good... Just append to it.
     innerDiv.appendChild(this.div);
 };

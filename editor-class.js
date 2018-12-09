@@ -103,12 +103,22 @@ var EditorClass = function() {
     });
 
     this.cm.on("inputRead", function() {
-        // console.log(javaScriptEditor.cm.getScrollInfo().top);
         if (files.js[activeJs]) {
-            // files.js[activeJs].scrollHeight = javaScriptEditor.cm.getScrollInfo().top;
             files.js[activeJs].data = javaScriptEditor.cm.getValue();
         }
     });
+    this.cm.on("keyHandled", function() {
+        if (files.js[activeJs]) {
+            files.js[activeJs].data = javaScriptEditor.cm.getValue();
+        }
+    });
+    this.cm.on("clear", function() {
+        if (files.js[activeJs]) {
+            files.js[activeJs].data = javaScriptEditor.cm.getValue();
+        }
+    });
+
+
 
     // TO DO: add show code param
     let searchParams = new URLSearchParams(window.location.search)
