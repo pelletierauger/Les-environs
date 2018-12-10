@@ -130,7 +130,6 @@ function init() {
         if (selection !== '' && nonEmptySelection[0]) {
             interpret(selection);
         } else {
-
             var openBracket = "(";
             var closeBracket = ")";
             var curLine = superColliderEditor.getCursor().line;
@@ -178,18 +177,10 @@ function init() {
                     }
                     if (countBrackets === 0) break;
 
-                    codeBracket += String(superColliderEditor.getLine(lineNow));
+                    codeBracket += `\n` + String(superColliderEditor.getLine(lineNow));
                     lineNow += 1;
                 }
-                // This transforms all single line comments into multi line comments
-                // so that they work with the interpreter.
-                // let r = /(\/{2})(.*?)(\s{4})/g;
-                let r = /(\/{2})(\s+)(.*?)(\s{4}|\/{2})/g;
-                let fixedComments = codeBracket.replace(r, function(a, b, c, d) {
-                    return "/*" + d + "*/";
-                });
-                console.log(fixedComments);
-                interpret(fixedComments);
+                interpret(codeBracket);
             } else {
                 interpret(superColliderEditor.getLine(superColliderEditor.getCursor().line));
             }
