@@ -1,3 +1,23 @@
+// Some of the code below (the parts that are related to the 
+// functionalities of the SuperCollider editor) is taken from the software
+// shipped with Prynth, which are "programmable sound synthesizers powered 
+// by single-board computers." Prynth is "part of the research of Ivan Franco 
+// at the Input Devices and Music Interaction Laboratory 
+// (IDMIL) / CIRMMT / McGill University, under the supervision of 
+// Marcelo M. Wanderley and funded by the Fundação para a Ciência e Tecnologia (FCT)."
+// https://prynth.github.io/
+// https://github.com/prynth/
+// https://ivanfranco.wordpress.com/
+// http://www.idmil.org/
+// http://www.cirmmt.org/
+// http://www.mcgill.ca/
+// http://idmil.org/people/marcelo_m._wanderley
+// http://www.fct.pt/
+// Prynth is distributed with a Creative Commons licence:
+// Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+// https://creativecommons.org/licenses/by-nc-sa/4.0/
+// The code below is distributed with the same licence.
+
 // var socket;
 let files;
 let scdTabs = [];
