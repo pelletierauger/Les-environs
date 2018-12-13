@@ -47,14 +47,16 @@ function gatherFiles() {
         js: []
     };
     if (fs.existsSync(sketchFolder + "/SuperCollider")) {
-        files.scd = fs.readdirSync(sketchFolder + "/SuperCollider");
-        for (let i = 0; i < files.scd.length; i++) {
-            files.scd[i] = {
-                name: files.scd[i],
-                path: sketchFolder + "/SuperCollider/" + files.scd[i],
-                active: false,
-                scrollHeight: 0
-            };
+        let allFiles = fs.readdirSync(sketchFolder + "/SuperCollider");
+        for (let i = 0; i < allFiles.length; i++) {
+            if (allFiles[i].substr(allFiles[i].length - 3) == "scd") {
+                files.scd.push({
+                    name: allFiles[i],
+                    path: sketchFolder + "/SuperCollider/" + allFiles[i],
+                    active: false,
+                    scrollHeight: 0
+                });
+            }
         }
     }
     sketchIndex.replace(/(src=")(.*?)(")/g, function(a, b, c) {
