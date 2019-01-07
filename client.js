@@ -360,7 +360,11 @@ function interpretAppControl(value) {
     var saveTest = /(^save\s|^s\s)([\s\S]*)/;
     var saveMatch = saveTest.exec(value);
     if (saveMatch) {
-        console.log("match : " + saveMatch[2]); // abc
+        if (saveMatch[2] !== currentLoadedFiles.js && saveMatch[2] !== currentLoadedFiles.scd) {
+            logJavaScriptConsole("Error: trying to save the wrong file.");
+            return;
+        }
+        // console.log("match : " + saveMatch[2]); // abc
         let matchedFile = false;
         for (let i = 0; i < files.scd.length; i++) {
             if (files.scd[i].name == saveMatch[2]) {
