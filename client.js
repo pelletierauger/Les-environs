@@ -386,7 +386,7 @@ function interpretAppControl(value) {
             return;
         }
     }
-    logJavaScriptConsole("Invalid statement.");
+    logJavaScriptConsole("Invalid command.");
 }
 
 function logJavaScriptConsole(msg) {
