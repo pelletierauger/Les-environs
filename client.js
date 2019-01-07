@@ -33,6 +33,8 @@ let currentLoadedFiles = {
 };
 window.onload = init;
 
+let curtain, scdArea, scdConsoleArea, jsArea, jsConsoleArea, jsCmArea, cmArea;
+
 function init() {
     var superColliderEditorContainer = document.getElementById("supercollider-editor");
     superColliderEditor = CodeMirror.fromTextArea(superColliderEditorContainer, {
@@ -257,9 +259,47 @@ function init() {
         javaScriptEditor.cm.setOption("readOnly", keysActive);
         // console.log("Leave the zone!");
     }, false);
+
+    curtain = document.getElementById("curtain");
+    scdArea = document.querySelector('.supercollider-area>div');
+    scdConsoleArea = document.querySelector('.supercollider-area>.console');
+    jsArea = document.querySelector('.javascript-area>div');
+    jsConsoleArea = document.querySelector('.javascript-area>.console');
+    cmArea = document.querySelector('.CodeMirror');
+    jsCmArea = document.querySelector('.javascript-area>.CodeMirror');
 }
 
 function interpretAppControl(value) {
+    if (value === "curtain off") {
+        curtain.setAttribute("style", "display:none;");
+        return;
+    }
+    if (value === "curtain on") {
+        curtain.setAttribute("style", "display:block;");
+        return;
+    }
+    if (value === "only scd") {
+        scdConsoleArea.setAttribute("style", "display:block;");
+        jsArea.setAttribute("style", "display:none;");
+        jsConsoleArea.setAttribute("style", "display:none;");
+        cmArea.setAttribute("style", "height:685px;");
+        return;
+    }
+    if (value === "only js") {
+        jsConsoleArea.setAttribute("style", "display:block;");
+        scdArea.setAttribute("style", "display:none;");
+        scdConsoleArea.setAttribute("style", "display:none;");
+        jsCmArea.setAttribute("style", "height:685px;");
+        return;
+    }
+    if (value === "both") {
+        cmArea.setAttribute("style", "height:315px;");
+        scdArea.setAttribute("style", "display:block;");
+        jsArea.setAttribute("style", "display:block;");
+        scdConsoleArea.setAttribute("style", "display:block;");
+        jsConsoleArea.setAttribute("style", "display:block;");
+        return;
+    }
     if (value === "ls") {
         console.log("whoa!");
         let allFiles = "";
