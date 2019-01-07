@@ -128,5 +128,6 @@
 
 .cm-s-les-environs .CodeMirror-selectedtext {
     /*color: yellow;*/
-    background: #C3C3C3;
+    background: #A6A6A6;
+    /*background: red;*/
 }
