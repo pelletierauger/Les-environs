@@ -272,12 +272,10 @@ io.sockets.on('connection', function(socket) {
             sclang.interpret(msg, null, true, true, false)
                 .then(function(result) {
                     io.sockets.emit('toscdconsole', result);
-                    // console.log(result);
                 })
                 .catch(function(error) {
                     var errorStringArray = JSON.stringify(error.error, null, ' ');
                     io.sockets.emit('toscdconsole', errorStringArray + '\n\n\n');
-                    console.log("Is this happening?");
                 });
         };
     });

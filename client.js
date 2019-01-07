@@ -301,7 +301,6 @@ function interpretAppControl(value) {
         return;
     }
     if (value === "ls") {
-        console.log("whoa!");
         let allFiles = "";
         for (let i = 0; i < files.scd.length; i++) {
             let comma = ", ";
