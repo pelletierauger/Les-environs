@@ -270,11 +270,11 @@ function init() {
 }
 
 function interpretAppControl(value) {
-    if (value === "curtain off") {
+    if (value === "curtain off" || value === "curtain up") {
         curtain.setAttribute("style", "display:none;");
         return;
     }
-    if (value === "curtain on") {
+    if (value === "curtain on" || value === "curtain down") {
         curtain.setAttribute("style", "display:block;");
         return;
     }
