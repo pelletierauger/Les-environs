@@ -34,6 +34,7 @@ let currentLoadedFiles = {
 window.onload = init;
 
 let curtain, scdArea, scdConsoleArea, jsArea, jsConsoleArea, jsCmArea, cmArea;
+let displayMode = "both";
 
 function init() {
     var superColliderEditorContainer = document.getElementById("supercollider-editor");
@@ -278,18 +279,22 @@ function interpretAppControl(value) {
         curtain.setAttribute("style", "display:block;");
         return;
     }
-    if (value === "only scd") {
+    if (value === "only scd" ||  value === "scd only" || value === "scd") {
         scdConsoleArea.setAttribute("style", "display:block;");
         jsArea.setAttribute("style", "display:none;");
         jsConsoleArea.setAttribute("style", "display:none;");
         cmArea.setAttribute("style", "height:685px;");
+        displayMode = "scd";
+        superColliderEditor.refresh();
         return;
     }
-    if (value === "only js") {
+    if (value === "only js" ||  value === "js only" || value === "js") {
         jsConsoleArea.setAttribute("style", "display:block;");
         scdArea.setAttribute("style", "display:none;");
         scdConsoleArea.setAttribute("style", "display:none;");
         jsCmArea.setAttribute("style", "height:685px;");
+        displayMode = "js";
+        javaScriptEditor.cm.refresh();
         return;
     }
     if (value === "both") {
@@ -298,7 +303,30 @@ function interpretAppControl(value) {
         jsArea.setAttribute("style", "display:block;");
         scdConsoleArea.setAttribute("style", "display:block;");
         jsConsoleArea.setAttribute("style", "display:block;");
+        displayMode = "both";
+        superColliderEditor.refresh();
+        javaScriptEditor.cm.refresh();
         return;
+    }
+    if (value === "scd<>js") {
+        console.log("beautiful");
+        if (displayMode === "both" || displayMode === "js") {
+            scdConsoleArea.setAttribute("style", "display:block;");
+            jsArea.setAttribute("style", "display:none;");
+            jsConsoleArea.setAttribute("style", "display:none;");
+            cmArea.setAttribute("style", "height:685px;");
+            displayMode = "scd";
+            superColliderEditor.refresh();
+            return;
+        } else if (displayMode === "scd") {
+            jsConsoleArea.setAttribute("style", "display:block;");
+            scdArea.setAttribute("style", "display:none;");
+            scdConsoleArea.setAttribute("style", "display:none;");
+            jsCmArea.setAttribute("style", "height:685px;");
+            displayMode = "js";
+            javaScriptEditor.cm.refresh();
+            return;
+        }
     }
     if (value === "ls") {
         let allFiles = "";
@@ -394,10 +422,14 @@ function interpretAppControl(value) {
 }
 
 function logJavaScriptConsole(msg) {
-    var span = document.createElement('span')
-    span.innerHTML = "<br>" + msg;
-    javaScriptConsole.appendChild(span);
-    javaScriptConsole.scrollTop = javaScriptConsole.scrollHeight;
+    if (displayMode === "scd") {
+        logSuperColliderConsole(msg);
+    } else {
+        var span = document.createElement('span')
+        span.innerHTML = "<br>" + msg;
+        javaScriptConsole.appendChild(span);
+        javaScriptConsole.scrollTop = javaScriptConsole.scrollHeight;
+    }
 }
 
 function logSuperColliderConsole(msg) {
