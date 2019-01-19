@@ -173,7 +173,7 @@ canvas {
     bottom: 10px;
     left: 430px;
     /*position: absolute;*/
-    width: 800px;
+    width: 900px;
     /*top: 0;*/
     /*left: 20;*/
     /*bottom: 10;*/
@@ -213,7 +213,7 @@ canvas {
     float: left;
 
     margin-right: 5px;
-    padding: 0px 8px;
+    padding: 0px 2px;
 }
 
 .file:hover {

@@ -19,7 +19,7 @@
 // The code below is distributed with the same licence.
 
 // var socket;
-let files;
+let files, savedFiles;
 let scdTabs = [];
 let jsTabs = [];
 let activeScd = null;
@@ -108,16 +108,19 @@ function init() {
     superColliderEditor.on("inputRead", function() {
         if (files.scd[activeScd]) {
             files.scd[activeScd].data = superColliderEditor.getValue();
+            checkIfScdSaved();
         }
     });
     superColliderEditor.on("keyHandled", function() {
         if (files.scd[activeScd]) {
             files.scd[activeScd].data = superColliderEditor.getValue();
+            checkIfScdSaved()
         }
     });
     superColliderEditor.on("clear", function() {
         if (files.scd[activeScd]) {
             files.scd[activeScd].data = superColliderEditor.getValue();
+            checkIfScdSaved();
         }
     });
 
@@ -216,6 +219,27 @@ function init() {
     // socket = io.connect('http://localhost:8080');
     socket.on('pushFiles', function(data) {
         files = data;
+        savedFiles = { scd: [], js: [] };
+        for (let i = 0; i < data.scd.length; i++) {
+            let d = data.scd[i];
+            savedFiles.scd.push({
+                name: d.name,
+                path: d.path,
+                active: d.active,
+                scrollHeight: d.scrollHeight,
+                data: d.data
+            });
+        }
+        for (let i = 0; i < data.js.length; i++) {
+            let d = data.js[i];
+            savedFiles.js.push({
+                name: d.name,
+                path: d.path,
+                active: d.active,
+                scrollHeight: d.scrollHeight,
+                data: d.data
+            });
+        }
         createTabs(files);
     });
     socket.emit('pullFiles', "");
@@ -401,6 +425,8 @@ function interpretAppControl(value) {
                 // superColliderEditor.setValue(files.scd[i].data);
                 // currentLoadedFiles.scd = files.scd[i].name;
                 matchedFile = true;
+                savedFiles.scd[activeScd].data = files.scd[activeScd].data;
+                checkIfScdSaved();
             }
         }
         if (!matchedFile) {
@@ -411,6 +437,8 @@ function interpretAppControl(value) {
                     // javaScriptEditor.cm.setValue(files.js[i].data);
                     // currentLoadedFiles.js = files.js[i].name;
                     matchedFile = true;
+                    savedFiles.js[activeJs].data = files.js[activeJs].data;
+                    checkIfJsSaved();
                 }
             }
         }
@@ -460,7 +488,7 @@ let Tab = function(file, type) {
     this.div = document.createElement('div');
     this.div.className = "file";
     this.div.id = "inactive-tab";
-    this.div.innerText = this.name;
+    this.div.innerHTML = "&nbsp;" + this.name + "&nbsp;";
     let that = this;
     if (this.type == "scd") {
         scdTabs.push(this);
@@ -515,3 +543,23 @@ let Tab = function(file, type) {
     let innerDiv = document.getElementById(innerDivName);
     innerDiv.appendChild(this.div);
 };
+
+function checkIfScdSaved() {
+    if (savedFiles.scd[activeScd].data !== files.scd[activeScd].data && !files.scd[activeScd].changed) {
+        scdTabs[activeScd].div.innerHTML = "•" + scdTabs[activeScd].name + "&nbsp;";
+        files.scd[activeScd].changed = true;
+    } else if (savedFiles.scd[activeScd].data == files.scd[activeScd].data && files.scd[activeScd].changed) {
+        scdTabs[activeScd].div.innerHTML = "&nbsp;" + scdTabs[activeScd].name + "&nbsp;";
+        files.scd[activeScd].changed = false;
+    }
+}
+
+function checkIfJsSaved() {
+    if (savedFiles.js[activeJs].data !== files.js[activeJs].data && !files.js[activeJs].changed) {
+        jsTabs[activeJs].div.innerHTML = "•" + jsTabs[activeJs].name + "&nbsp;";
+        files.js[activeJs].changed = true;
+    } else if (savedFiles.js[activeJs].data == files.js[activeJs].data && files.js[activeJs].changed) {
+        jsTabs[activeJs].div.innerHTML = "&nbsp;" + jsTabs[activeJs].name + "&nbsp;";
+        files.js[activeJs].changed = false;
+    }
+}

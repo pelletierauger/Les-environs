@@ -105,16 +105,19 @@ var EditorClass = function() {
     this.cm.on("inputRead", function() {
         if (files.js[activeJs]) {
             files.js[activeJs].data = javaScriptEditor.cm.getValue();
+            checkIfJsSaved();
         }
     });
     this.cm.on("keyHandled", function() {
         if (files.js[activeJs]) {
             files.js[activeJs].data = javaScriptEditor.cm.getValue();
+            checkIfJsSaved();
         }
     });
     this.cm.on("clear", function() {
         if (files.js[activeJs]) {
             files.js[activeJs].data = javaScriptEditor.cm.getValue();
+            checkIfJsSaved();
         }
     });
 

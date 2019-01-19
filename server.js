@@ -72,6 +72,7 @@ function gatherFiles() {
                     name: allFiles[i],
                     path: sketchFolder + "/SuperCollider/" + allFiles[i],
                     active: false,
+                    changed: false,
                     scrollHeight: 0
                 });
             }
