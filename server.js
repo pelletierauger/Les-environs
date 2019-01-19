@@ -233,6 +233,10 @@ io.sockets.on('connection', function(socket) {
         io.sockets.emit('pushFiles', files);
         console.log("Pushing files.");
     });
+    socket.on('pullSketchFolder', function() {
+        io.sockets.emit('pushSketchFolder', sketchFolder);
+        // console.log("Pushing files.");
+    });
 
     // socket.on('pullMessage', function() {
     //     io.sockets.emit('pushMessage', files);

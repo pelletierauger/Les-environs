@@ -19,6 +19,7 @@
 // The code below is distributed with the same licence.
 
 // var socket;
+let sketchFolder;
 let files, savedFiles;
 let scdTabs = [];
 let jsTabs = [];
@@ -243,6 +244,12 @@ function init() {
         createTabs(files);
     });
     socket.emit('pullFiles', "");
+
+    socket.on('pushSketchFolder', function(data) {
+        sketchFolder = data;
+    });
+    socket.emit('pullSketchFolder', "");
+
     socket.on('pushMessage', function(data) {
         logJavaScriptConsole(data);
     });
@@ -445,6 +452,60 @@ function interpretAppControl(value) {
         if (matchedFile) {
             return;
         }
+    }
+    var newTest = /(^new\s|^s\s)([\s\S]*)/;
+    var newMatch = newTest.exec(value);
+    if (newMatch) {
+        if (newMatch[2].substr(newMatch[2].length - 4) == ".scd") {
+            for (let i = 0; i < files.scd.length; i++) {
+                if (files.scd[i].name == newMatch[2]) {
+                    logJavaScriptConsole("The file " + newMatch[2] + " already exists.");
+                    return;
+                }
+            }
+            files.scd.push({
+                name: newMatch[2],
+                path: sketchFolder + "/SuperCollider/" + newMatch[2],
+                active: false,
+                changed: false,
+                scrollHeight: 0,
+                data: ""
+            });
+            savedFiles.scd.push({
+                name: newMatch[2],
+                path: sketchFolder + "/SuperCollider/" + newMatch[2],
+                active: false,
+                scrollHeight: 0,
+                data: ""
+            });
+            let t = new Tab(files.scd[files.scd.length - 1], "scd");
+        } else if (newMatch[2].substr(newMatch[2].length - 3) == ".js") {
+            for (let i = 0; i < files.js.length; i++) {
+                if (files.js[i].name == newMatch[2]) {
+                    logJavaScriptConsole("The file " + newMatch[2] + " already exists.");
+                    return;
+                }
+            }
+            files.js.push({
+                name: newMatch[2],
+                path: sketchFolder + "/" + newMatch[2],
+                active: false,
+                changed: false,
+                scrollHeight: 0,
+                data: ""
+            });
+            savedFiles.js.push({
+                name: newMatch[2],
+                path: sketchFolder + "/" + newMatch[2],
+                active: false,
+                scrollHeight: 0,
+                data: ""
+            });
+            let t = new Tab(files.js[files.js.length - 1], "js");
+        } else {
+            logJavaScriptConsole("Filenames must end with .scd or .js.");
+        }
+        return;
     }
     logJavaScriptConsole("Invalid command.");
 }
