@@ -624,3 +624,7 @@ function checkIfJsSaved() {
         files.js[activeJs].changed = false;
     }
 }
+
+function log(msg) {
+    logJavaScriptConsole(msg);
+}

@@ -297,6 +297,28 @@ io.sockets.on('connection', function(socket) {
         udpPort.send(msg);
     });
 
+    socket.on('sendOSC', function(message) {
+        let arguments = [];
+        if (Array.isArray(message.value)) {
+            for (let i = 0; i < message.value.length; i++) {
+                arguments.push({
+                    type: message.type,
+                    value: message.value[i]
+                });
+            }
+        } else {
+            arguments.push({
+                type: message.type,
+                value: message.value
+            });
+        }
+        var msg = {
+            address: message.address,
+            args: arguments
+        };
+        udpPort.send(msg);
+    });
+
     // socket.on('savePoints', function(data) {
     //     console.log(data);
     //     data = JSON.stringify(data);
