@@ -64,6 +64,7 @@ body {
 .console {
     /*#javascript-console, #supercollider-console {*/
     display: block;
+    position: relative;
     margin-left: 10px;
     background: none;
     overflow: scroll;
