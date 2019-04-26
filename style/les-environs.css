@@ -40,18 +40,30 @@
     /*/*background: #D0D0D0;*/
     */
 }
+.cm-s-les-environs span.cm-delimit {
+    color: #75715e;
+    /*/*background: #D0D0D0;*/
+    */
+}
 .cm-s-les-environs span.cm-atom {
-    color: #7136D0;
+    color: #AB670C;
     /*background: #D0D0D0;*/
 }
+.cm-s-les-environs span.cm-operator {
+    color: #AB670C;
+    /*background: #D0D0D0;*/
+}
+.cm-s-les-environs span.cm-string {
+    /*color: #C17101;*/
+    color: #AB670C;
+    /*background: #D0D0D0;*/
+}
+
 .cm-s-les-environs span.cm-number {
     color: #5F9A00;
     /*background: #D0D0D0;*/
 }
-.cm-s-les-environs span.cm-operator {
-    color: #B46900;
-    /*background: #D0D0D0;*/
-}
+
 
 .cm-s-les-environs span.cm-property, .cm-s-les-environs span.cm-attribute {
     color: #000000;
@@ -60,12 +72,12 @@
     color: #1923C8;
     /*background: #D0D0D0;*/
 }
-.cm-s-les-environs span.cm-builtin {
-    color: #000000;
+.cm-s-les-environs span.cm-type {
+    color: #1923C8;
     /*background: #D0D0D0;*/
 }
-.cm-s-les-environs span.cm-string {
-    color: #C17101;
+.cm-s-les-environs span.cm-builtin {
+    color: #000000;
     /*background: #D0D0D0;*/
 }
 
