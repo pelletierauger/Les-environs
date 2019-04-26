@@ -30,12 +30,23 @@ var EditorClass = function() {
     //     },
     // });
 
+    CodeMirror.defineMode("jsglsl", function(config) {
+        return CodeMirror.multiplexingMode(
+            CodeMirror.getMode(config, "javascript"), {
+                open: "// beginGLSL",
+                close: "// endGLSL",
+                mode: CodeMirror.getMode(config, "x-shader/x-fragment"),
+                delimStyle: "delimit"
+            }
+            // .. more multiplexed styles can follow here
+        );
+    });
 
     this.cm = CodeMirror.fromTextArea(document.getElementById("javascript-editor"), {
         // theme: 'tomorrow-night-eighties',
         theme: 'les-environs',
         value: 'hello',
-        mode: { name: 'javascript', globalVars: true },
+        mode: { name: 'jsglsl', globalVars: true },
         matchBrackets: true,
         autofocus: true,
         smartIndent: true,
