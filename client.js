@@ -312,26 +312,29 @@ function interpretAppControl(value) {
     }
     if (value === "only scd" ||  value === "scd only" || value === "scd") {
         scdConsoleArea.setAttribute("style", "display:block;");
-        jsArea.setAttribute("style", "display:none;");
+        scdArea.style.display = "block";
+        jsArea.style.display = "none";
         jsConsoleArea.setAttribute("style", "display:none;");
-        cmArea.setAttribute("style", "height:685px;");
+        cmArea.style.height = "685px";
         displayMode = "scd";
         superColliderEditor.refresh();
         return;
     }
     if (value === "only js" ||  value === "js only" || value === "js") {
         jsConsoleArea.setAttribute("style", "display:block;");
-        scdArea.setAttribute("style", "display:none;");
+        scdArea.style.display = "none";
         scdConsoleArea.setAttribute("style", "display:none;");
-        jsCmArea.setAttribute("style", "height:685px;");
+        jsCmArea.style.height = "685px";
+        jsArea.style.display = "block";
         displayMode = "js";
         javaScriptEditor.cm.refresh();
         return;
     }
     if (value === "both") {
-        cmArea.setAttribute("style", "height:315px;");
-        scdArea.setAttribute("style", "display:block;");
-        jsArea.setAttribute("style", "display:block;");
+        scdArea.style.height = "315px";
+        jsArea.style.height = "315px";
+        scdArea.style.display = "block";
+        jsArea.style.display = "block";
         scdConsoleArea.setAttribute("style", "display:block;");
         jsConsoleArea.setAttribute("style", "display:block;");
         displayMode = "both";
@@ -340,20 +343,21 @@ function interpretAppControl(value) {
         return;
     }
     if (value === "scd<>js") {
-        console.log("beautiful");
         if (displayMode === "both" || displayMode === "js") {
             scdConsoleArea.setAttribute("style", "display:block;");
-            jsArea.setAttribute("style", "display:none;");
+            jsArea.style.display = "none";
+            scdArea.style.display = "block";
             jsConsoleArea.setAttribute("style", "display:none;");
-            cmArea.setAttribute("style", "height:685px;");
+            cmArea.style.height = "685px";
             displayMode = "scd";
             superColliderEditor.refresh();
             return;
         } else if (displayMode === "scd") {
             jsConsoleArea.setAttribute("style", "display:block;");
-            scdArea.setAttribute("style", "display:none;");
+            jsArea.style.display = "block";
+            scdArea.style.display = "none";
             scdConsoleArea.setAttribute("style", "display:none;");
-            jsCmArea.setAttribute("style", "height:685px;");
+            jsCmArea.style.height = "685px";
             displayMode = "js";
             javaScriptEditor.cm.refresh();
             return;
@@ -381,6 +385,24 @@ function interpretAppControl(value) {
         }
         return;
     }
+
+    var widthTest = /(^width\s|^l\s)([\s\S]*)/;
+    var widthMatch = widthTest.exec(value);
+    if (widthMatch) {
+        let numberTest = /^\d+$/;
+        if (numberTest.exec(widthMatch[2])) {
+            cmArea.style.width = widthMatch[2] + "px";
+            jsCmArea.style.width = widthMatch[2] + "px";
+            logJavaScriptConsole("Setting the editors' width to " + widthMatch[2] + "px.");
+            return;
+        } else if (widthMatch[2] == "default") {
+            cmArea.style.width = "700px";
+            jsCmArea.style.width = "700px";
+            logJavaScriptConsole("Setting the editors' width to the default value, 700px.");
+            return;
+        }
+    }
+
     var loadTest = /(^load\s|^l\s)([\s\S]*)/;
     var loadMatch = loadTest.exec(value);
     if (loadMatch) {
