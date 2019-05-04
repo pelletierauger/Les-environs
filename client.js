@@ -36,6 +36,7 @@ window.onload = init;
 
 let curtain, scdArea, scdConsoleArea, jsArea, jsConsoleArea, jsCmArea, cmArea;
 let displayMode = "both";
+let hidden = false;
 
 function init() {
     var superColliderEditorContainer = document.getElementById("supercollider-editor");
@@ -302,6 +303,30 @@ function init() {
 }
 
 function interpretAppControl(value) {
+    if (value === "hide") {
+        if (!hidden) {
+            scdArea.style.display = "none";
+            scdConsoleArea.style.display = "none";
+            jsArea.style.display = "none";
+            jsConsoleArea.style.display = "none";
+            hidden = true;
+        } else {
+            if (displayMode === "both") {
+                scdArea.style.display = "block";
+                scdConsoleArea.style.display = "block";
+                jsArea.style.display = "block";
+                jsConsoleArea.style.display = "block";
+            } else if (displayMode == "scd") {
+                scdArea.style.display = "block";
+                scdConsoleArea.style.display = "block";
+            } else if (displayMode == "js") {
+                jsArea.style.display = "block";
+                jsConsoleArea.style.display = "block";
+            }
+            hidden = false;
+            return;
+        }
+    }
     if (value === "curtain off" || value === "curtain up") {
         curtain.setAttribute("style", "display:none;");
         return;
