@@ -37,6 +37,7 @@ window.onload = init;
 let curtain, scdArea, scdConsoleArea, jsArea, jsConsoleArea, jsCmArea, cmArea;
 let displayMode = "both";
 let hidden = false;
+let curtainDisplay = false;
 
 function init() {
     var superColliderEditorContainer = document.getElementById("supercollider-editor");
@@ -327,12 +328,24 @@ function interpretAppControl(value) {
             return;
         }
     }
+    if (value === "curtain") {
+        if (curtainDisplay) {
+            curtain.setAttribute("style", "display:none;");
+            curtainDisplay = false;
+        } else {
+            curtain.setAttribute("style", "display:block;");
+            curtainDisplay = true;
+        }
+        return;
+    }
     if (value === "curtain off" || value === "curtain up") {
         curtain.setAttribute("style", "display:none;");
+        curtainDisplay = false;
         return;
     }
     if (value === "curtain on" || value === "curtain down") {
         curtain.setAttribute("style", "display:block;");
+        curtainDisplay = true;
         return;
     }
     if (value === "only scd" ||  value === "scd only" || value === "scd") {
