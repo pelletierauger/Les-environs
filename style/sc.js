@@ -1781,9 +1781,9 @@ CodeMirror.defineMode("sc", function(config, parserConfig) {
         stream.eatWhile(isOperatorChar);
         return ret("operator", "operator", stream.current());
       }
-    } else if (ch == "`") {
-      state.tokenize = tokenQuasi;
-      return tokenQuasi(stream, state);
+    // } else if (ch == "`") {
+    //   state.tokenize = tokenQuasi;
+    //   return tokenQuasi(stream, state);
     } else if (ch == "#") {
       stream.skipToEnd();
       return ret("error", "error");
@@ -2434,7 +2434,8 @@ CodeMirror.defineMode("sc", function(config, parserConfig) {
     blockCommentEnd: jsonMode ? null : "*/",
     lineComment: jsonMode ? null : "//",
     fold: "brace",
-    closeBrackets: "()[]{}''\"\"``",
+    // closeBrackets: "()[]{}''\"\"``",
+    closeBrackets: "()[]{}''\"\"",
 
     helperType: jsonMode ? "json" : "sc",
     jsonldMode: jsonldMode,
