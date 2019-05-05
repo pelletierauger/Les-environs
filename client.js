@@ -326,13 +326,13 @@ function interpretAppControl(value) {
     if (value === "curtain") {
         if (curtainDisplay) {
             curtain.setAttribute("style", "display:none;");
-            scdArea.style.padding = "";
-            jsArea.style.padding = "";
+            // scdArea.style.padding = "";
+            // jsArea.style.padding = "";
             curtainDisplay = false;
         } else {
             curtain.setAttribute("style", "display:block;");
-            scdArea.style.padding = "0em 1.5em";
-            jsArea.style.padding = "0em 1.5em";
+            // scdArea.style.padding = "0em 1.5em";
+            // jsArea.style.padding = "0em 1.5em";
             curtainDisplay = true;
         }
         return;
