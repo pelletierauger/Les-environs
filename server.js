@@ -272,9 +272,9 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
-    socket.on('interpretSuperCollider', function(msg) {
+    socket.on('interpretSuperCollider', function(msg, path) {
         if (sclang !== null) {
-            sclang.interpret(msg, null, true, true, false)
+            sclang.interpret(msg, path, true, true, false)
                 .then(function(result) {
                     io.sockets.emit('toscdconsole', result);
                 })

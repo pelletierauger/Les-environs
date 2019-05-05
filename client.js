@@ -139,18 +139,13 @@ function init() {
     });
 
     function interpret(data) {
-        socket.emit('interpretSuperCollider', data);
-        // for (let i = 0; i < files.scd.length; i++) {
-        //     if (files.scd[i].active) {
-        //         files.scd[i].data = superColliderEditor.getValue();
-        //     }
-        // }
+        socket.emit('interpretSuperCollider', data, files.scd[activeScd].path);
     }
 
     function runLine() {
         var curLine = superColliderEditor.getCursor().line;
         let line = String(superColliderEditor.getLine(curLine));
-        socket.emit('interpretSuperCollider', line);
+        interpret(line);
     }
 
     function runsel() {
