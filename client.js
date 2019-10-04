@@ -280,12 +280,14 @@ function init() {
         keysActive = true;
         superColliderEditor.setOption("readOnly", keysActive);
         javaScriptEditor.cm.setOption("readOnly", keysActive);
+        appControl.readOnly = true;
         // console.log("Enter the zone!");
     }, false);
     keysControl.addEventListener("mouseleave", function(event) {
         keysActive = false;
         superColliderEditor.setOption("readOnly", keysActive);
         javaScriptEditor.cm.setOption("readOnly", keysActive);
+        appControl.readOnly = false;
         // console.log("Leave the zone!");
     }, false);
 
