@@ -327,8 +327,10 @@ function appControlIncID() {
 }
 
 function interpretAppControl(value) {
-    appControlCommands.push(value);
-    appControlCommandID = appControlCommands.length - 1;
+    if (value !== appControlCommands[appControlCommands.length - 1]) {
+        appControlCommands.push(value);
+        appControlCommandID = appControlCommands.length - 1;
+    }
     if (value === "loop") {
         if (looping) {
             noLoop();
