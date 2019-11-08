@@ -33,6 +33,8 @@ let currentLoadedFiles = {
     js: null
 };
 window.onload = init;
+let appControlCommands = [];
+let appControlCommandID = 0;
 
 let curtain, scdArea, scdConsoleArea, jsArea, jsConsoleArea, jsCmArea, cmArea;
 let displayMode = "both";
@@ -262,8 +264,14 @@ function init() {
     appControl.addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
-
             interpretAppControl(appcontrol.value);
+        } else if (event.keyCode === 38) {
+            // When ArrowUp gets pressed
+            // appControl.setSelectionRange(appControl.value.length, appControl.value.length);
+            appControlDecID();
+        } else if (event.keyCode === 40) {
+            // When ArrowDown gets pressed
+            appControlIncID();
         }
     });
 
@@ -300,7 +308,37 @@ function init() {
     jsCmArea = document.querySelector('.javascript-area>.CodeMirror');
 }
 
+function appControlDecID() {
+    if (appControlCommandID > 0) {
+        appControlCommandID -= 1;
+        let newCommand = appControlCommands[appControlCommandID];
+        appControl.value = newCommand;
+        appControl.setSelectionRange(newCommand.length, newCommand.length);
+    }
+}
+
+function appControlIncID() {
+    if (appControlCommandID < appControlCommands.length - 1) {
+        appControlCommandID += 1;
+        let newCommand = appControlCommands[appControlCommandID];
+        appControl.value = newCommand;
+        appControl.setSelectionRange(newCommand.length, newCommand.length);
+    }
+}
+
 function interpretAppControl(value) {
+    appControlCommands.push(value);
+    appControlCommandID = appControlCommands.length - 1;
+    if (value === "loop") {
+        if (looping) {
+            noLoop();
+            looping = false;
+        } else {
+            loop();
+            looping = true;
+        }
+        return;
+    }
     if (value === "hide") {
         if (!hidden) {
             scdArea.style.display = "none";
@@ -568,6 +606,14 @@ function interpretAppControl(value) {
         }
         return;
     }
+    if (value[0] === "(") {
+        eval(value.substr(1));
+        return;
+    }
+    if (value[0] === "'") {
+        eval(`logJavaScriptConsole(${value.substr(1)})`);
+        return;
+    }
     logJavaScriptConsole("Invalid command.");
 }
 
@@ -593,6 +639,7 @@ function logSuperColliderConsole(msg) {
         }
     }
 }
+
 
 function createTabs(f) {
     for (let i = 0; i <  f.scd.length; i++) {
@@ -686,6 +733,6 @@ function checkIfJsSaved() {
     }
 }
 
-function log(msg) {
+function lo(msg) {
     logJavaScriptConsole(msg);
 }
