@@ -631,11 +631,13 @@ function logJavaScriptConsole(msg) {
 }
 
 function logSuperColliderConsole(msg) {
-    if (msg.length > 0 && typeof msg === 'string' && msg !== null) {
-        let r = msg.match(/^\s*$/);
+    // if (msg.length > 0 && typeof msg === 'string' && msg !== null) {
+    let message = "" + msg;
+    if (message.length > 0 && message !== null) {
+        let r = message.match(/^\s*$/);
         if (r === null) {
             var span = document.createElement('span')
-            span.innerHTML = "<br>" + msg;
+            span.innerHTML = "<br>" + message;
             superColliderConsole.appendChild(span);
             superColliderConsole.scrollTop = superColliderConsole.scrollHeight;
         }
