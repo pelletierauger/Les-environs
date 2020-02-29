@@ -78,7 +78,7 @@ function gatherFiles() {
             }
         }
     }
-    sketchIndex.replace(/(src=")(.*?)(")/g, function(a, b, c) {
+    sketchIndex.replace(/(script src=")(.*?)(")/g, function(a, b, c) {
         if (!c.match(/libraries/g) &&
             !c.match(/frame-export/g) &&
             !c.match(/http/g)
