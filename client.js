@@ -40,6 +40,7 @@ let curtain, scdArea, scdConsoleArea, jsArea, jsConsoleArea, jsCmArea, cmArea;
 let displayMode = "both";
 let hidden = false;
 let curtainDisplay = false;
+let autoRedraw = false;
 
 function init() {
     var superColliderEditorContainer = document.getElementById("supercollider-editor");
