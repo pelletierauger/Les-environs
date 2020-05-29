@@ -349,6 +349,7 @@ function interpretAppControl(value) {
             jsArea.style.display = "none";
             jsConsoleArea.style.display = "none";
             hidden = true;
+            return;
         } else {
             if (displayMode === "both") {
                 scdArea.style.display = "block";
