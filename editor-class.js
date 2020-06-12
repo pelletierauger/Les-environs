@@ -96,7 +96,8 @@ var EditorClass = function() {
             "Shift-Tab": (cm) => cm.execCommand("indentLess"),
             'Cmd-Alt-0': (cm) => cm.execCommand("indentMore"),
             'Cmd-Alt-9': (cm) => cm.execCommand("indentLess"),
-            'Cmd-Alt-/': "toggleComment"
+            // 'Cmd-Alt-/': "toggleComment"
+            'Cmd-Alt-/': (cm) => cm.toggleComment({ indent: true })
         }
     })
 
