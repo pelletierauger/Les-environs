@@ -219,29 +219,31 @@ function init() {
 
     // socket = io.connect('http://localhost:8080');
     socket.on('pushFiles', function(data) {
-        files = data;
-        savedFiles = { scd: [], js: [] };
-        for (let i = 0; i < data.scd.length; i++) {
-            let d = data.scd[i];
-            savedFiles.scd.push({
-                name: d.name,
-                path: d.path,
-                active: d.active,
-                scrollHeight: d.scrollHeight,
-                data: d.data
-            });
+        if (typeof files === "undefined") {
+            files = data;
+            savedFiles = { scd: [], js: [] };
+            for (let i = 0; i < data.scd.length; i++) {
+                let d = data.scd[i];
+                savedFiles.scd.push({
+                    name: d.name,
+                    path: d.path,
+                    active: d.active,
+                    scrollHeight: d.scrollHeight,
+                    data: d.data
+                });
+            }
+            for (let i = 0; i < data.js.length; i++) {
+                let d = data.js[i];
+                savedFiles.js.push({
+                    name: d.name,
+                    path: d.path,
+                    active: d.active,
+                    scrollHeight: d.scrollHeight,
+                    data: d.data
+                });
+            }
+            createTabs(files);
         }
-        for (let i = 0; i < data.js.length; i++) {
-            let d = data.js[i];
-            savedFiles.js.push({
-                name: d.name,
-                path: d.path,
-                active: d.active,
-                scrollHeight: d.scrollHeight,
-                data: d.data
-            });
-        }
-        createTabs(files);
     });
     socket.emit('pullFiles', "");
 
