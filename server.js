@@ -272,6 +272,22 @@ io.sockets.on('connection', function(socket) {
         });
     });
 
+    socket.on('imageSequence', function(data) {
+        let imageBuffer = decodeBase64Image(data.dataUrl);
+        fs.writeFile(data.name + ".png", imageBuffer.data, function(err) {
+            if (err) {
+                return console.error(err);
+            } else {
+                let date = getTimeStamp();
+                let msg = data.name + '.png written successfully on ' + date.day + " at " + date.time + ".";
+                console.log(msg);
+                // console.log(data.name + ".png written successfully.");
+                io.sockets.emit('pushMessage', msg);
+                io.sockets.emit('getNextImage');
+            }
+        });
+    });
+
     socket.on('interpretSuperCollider', function(msg, path) {
         if (sclang !== null) {
             sclang.interpret(msg, path, true, true, false)
@@ -341,8 +357,10 @@ io.sockets.on('connection', function(socket) {
             if (err) {
                 return console.error(err);
             } else {
-                console.log(file.path + ' written successfully.');
-                io.sockets.emit('pushMessage', file.path + ' written successfully.');
+                let date = getTimeStamp();
+                let msg = file.path + ' written successfully on ' + date.day + " at " + date.time + ".";
+                console.log(msg);
+                io.sockets.emit('pushMessage', msg);
             }
         });
     });
@@ -384,4 +402,25 @@ function decodeBase64Image(dataString) {
     response.data = new Buffer(matches[2], 'base64');
 
     return response;
+}
+
+function getTimeStamp() {
+    let d = new Date();
+    let year = d.getFullYear();
+    let month = d.getMonth() + 1;
+    month = (month < 10) ? "0" + month : month;
+    let dayOfTheMonth = d.getDate();
+    dayOfTheMonth = (dayOfTheMonth < 10) ? "0" + dayOfTheMonth : dayOfTheMonth;
+    let day = year + "-" + month + "-" + dayOfTheMonth;
+    let hours = d.getHours();
+    hours = (hours < 10) ? "0" + hours : hours;
+    let minutes = d.getMinutes();
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    let seconds = d.getSeconds();
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+    let time = hours + ":" + minutes + ":" + seconds;
+    return {
+        day: day,
+        time: time
+    };
 }
