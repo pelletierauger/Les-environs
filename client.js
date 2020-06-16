@@ -41,6 +41,7 @@ let displayMode = "both";
 let hidden = false;
 let curtainDisplay = false;
 let autoRedraw = false;
+let jsLog = [];
 
 function init() {
     var superColliderEditorContainer = document.getElementById("supercollider-editor");
