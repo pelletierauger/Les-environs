@@ -115,19 +115,19 @@ function init() {
     superColliderEditor.on("inputRead", function() {
         if (files.scd[activeScd]) {
             files.scd[activeScd].data = superColliderEditor.getValue();
-            checkIfScdSaved();
+            checkIfScdSaved(activeScd);
         }
     });
     superColliderEditor.on("keyHandled", function() {
         if (files.scd[activeScd]) {
             files.scd[activeScd].data = superColliderEditor.getValue();
-            checkIfScdSaved()
+            checkIfScdSaved(activeScd)
         }
     });
     superColliderEditor.on("clear", function() {
         if (files.scd[activeScd]) {
             files.scd[activeScd].data = superColliderEditor.getValue();
-            checkIfScdSaved();
+            checkIfScdSaved(activeScd);
         }
     });
 
@@ -525,39 +525,59 @@ function interpretAppControl(value) {
     var saveTest = /(^save\s|^s\s)([\s\S]*)/;
     var saveMatch = saveTest.exec(value);
     if (saveMatch) {
-        if (saveMatch[2] !== currentLoadedFiles.js && saveMatch[2] !== currentLoadedFiles.scd) {
-            logJavaScriptConsole("Error: trying to save the wrong file.");
-            return;
-        }
+        // if (saveMatch[2] !== currentLoadedFiles.js && saveMatch[2] !== currentLoadedFiles.scd) {
+        //     logJavaScriptConsole("Error: trying to save the wrong file.");
+        //     return;
+        // }
         // console.log("match : " + saveMatch[2]); // abc
         let matchedFile = false;
         for (let i = 0; i < files.scd.length; i++) {
             if (files.scd[i].name == saveMatch[2]) {
-                files.scd[i].data = superColliderEditor.getValue();
-                socket.emit('saveFile', files.scd[i]);
+                matchedFile = true;
+                // files.scd[i].data = superColliderEditor.getValue();
+                savedFiles.scd[i].data = files.scd[i].data;
+                socket.emit('saveFile', savedFiles.scd[i]);
                 // superColliderEditor.setValue(files.scd[i].data);
                 // currentLoadedFiles.scd = files.scd[i].name;
-                matchedFile = true;
-                savedFiles.scd[activeScd].data = files.scd[activeScd].data;
-                checkIfScdSaved();
+                checkIfScdSaved(i);
             }
         }
         if (!matchedFile) {
             for (let i = 0; i < files.js.length; i++) {
                 if (files.js[i].name == saveMatch[2]) {
-                    files.js[i].data = javaScriptEditor.cm.getValue();
+                    matchedFile = true;
+                    // files.js[i].data = javaScriptEditor.cm.getValue();
+                    savedFiles.js[i].data = files.js[i].data;
                     socket.emit('saveFile', files.js[i]);
                     // javaScriptEditor.cm.setValue(files.js[i].data);
                     // currentLoadedFiles.js = files.js[i].name;
-                    matchedFile = true;
-                    savedFiles.js[activeJs].data = files.js[activeJs].data;
-                    checkIfJsSaved();
+                    checkIfJsSaved(i);
                 }
             }
         }
         if (matchedFile) {
             return;
+        } else {
+            logJavaScriptConsole("Error: This file does not exist.");
+            return;
         }
+    }
+    if (value === "saveall") {
+        for (let i = 0; i < files.scd.length; i++) {
+            if (savedFiles.scd[i].data !== files.scd[i].data) {
+                savedFiles.scd[i].data = files.scd[i].data;
+                socket.emit('saveFile', savedFiles.scd[i]);
+                checkIfScdSaved(i);
+            }
+        }
+        for (let i = 0; i < files.js.length; i++) {
+            if (savedFiles.js[i].data !== files.js[i].data) {
+                savedFiles.js[i].data = files.js[i].data;
+                socket.emit('saveFile', files.js[i]);
+                checkIfJsSaved(i);
+            }
+        }
+        return;
     }
     var newTest = /(^new\s|^s\s)([\s\S]*)/;
     var newMatch = newTest.exec(value);
@@ -722,23 +742,23 @@ let Tab = function(file, type) {
     innerDiv.appendChild(this.div);
 };
 
-function checkIfScdSaved() {
-    if (savedFiles.scd[activeScd].data !== files.scd[activeScd].data && !files.scd[activeScd].changed) {
-        scdTabs[activeScd].div.innerHTML = "•" + scdTabs[activeScd].name + "&nbsp;";
-        files.scd[activeScd].changed = true;
-    } else if (savedFiles.scd[activeScd].data == files.scd[activeScd].data && files.scd[activeScd].changed) {
-        scdTabs[activeScd].div.innerHTML = "&nbsp;" + scdTabs[activeScd].name + "&nbsp;";
-        files.scd[activeScd].changed = false;
+function checkIfScdSaved(i) {
+    if (savedFiles.scd[i].data !== files.scd[i].data && !files.scd[i].changed) {
+        scdTabs[i].div.innerHTML = "•" + scdTabs[i].name + "&nbsp;";
+        files.scd[i].changed = true;
+    } else if (savedFiles.scd[i].data == files.scd[i].data && files.scd[i].changed) {
+        scdTabs[i].div.innerHTML = "&nbsp;" + scdTabs[i].name + "&nbsp;";
+        files.scd[i].changed = false;
     }
 }
 
-function checkIfJsSaved() {
-    if (savedFiles.js[activeJs].data !== files.js[activeJs].data && !files.js[activeJs].changed) {
-        jsTabs[activeJs].div.innerHTML = "•" + jsTabs[activeJs].name + "&nbsp;";
-        files.js[activeJs].changed = true;
-    } else if (savedFiles.js[activeJs].data == files.js[activeJs].data && files.js[activeJs].changed) {
-        jsTabs[activeJs].div.innerHTML = "&nbsp;" + jsTabs[activeJs].name + "&nbsp;";
-        files.js[activeJs].changed = false;
+function checkIfJsSaved(i) {
+    if (savedFiles.js[i].data !== files.js[i].data && !files.js[i].changed) {
+        jsTabs[i].div.innerHTML = "•" + jsTabs[i].name + "&nbsp;";
+        files.js[i].changed = true;
+    } else if (savedFiles.js[i].data == files.js[i].data && files.js[i].changed) {
+        jsTabs[i].div.innerHTML = "&nbsp;" + jsTabs[i].name + "&nbsp;";
+        files.js[i].changed = false;
     }
 }
 
