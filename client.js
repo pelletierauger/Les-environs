@@ -579,6 +579,43 @@ function interpretAppControl(value) {
         }
         return;
     }
+    var revertTest = /(^revert\s|^s\s)([\s\S]*)/;
+    var revertMatch = revertTest.exec(value);
+    if (revertMatch) {
+        let matchedFile = false;
+        for (let i = 0; i < files.scd.length; i++) {
+            if (files.scd[i].name == revertMatch[2]) {
+                matchedFile = true;
+                files.scd[i].data = savedFiles.scd[i].data;
+                checkIfScdSaved(i);
+                if (i == activeScd) {
+                    let scrollValue = files.scd[i].scrollHeight;
+                    superColliderEditor.setValue(files.scd[i].data);
+                    superColliderEditor.scrollTo(0, scrollValue);
+                }
+            }
+        }
+        if (!matchedFile) {
+            for (let i = 0; i < files.js.length; i++) {
+                if (files.js[i].name == revertMatch[2]) {
+                    matchedFile = true;
+                    files.js[i].data = savedFiles.js[i].data;
+                    checkIfJsSaved(i);
+                    if (i == activeJs) {
+                        let scrollValue = files.js[i].scrollHeight;
+                        javaScriptEditor.cm.setValue(files.js[i].data);
+                        javaScriptEditor.cm.scrollTo(0, scrollValue);
+                    }
+                }
+            }
+        }
+        if (matchedFile) {
+            return;
+        } else {
+            logJavaScriptConsole("Error: This file does not exist.");
+            return;
+        }
+    }
     var newTest = /(^new\s|^s\s)([\s\S]*)/;
     var newMatch = newTest.exec(value);
     if (newMatch) {
