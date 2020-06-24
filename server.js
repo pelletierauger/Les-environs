@@ -9,6 +9,7 @@ var htmlSources = {
     head: fs.readFileSync("html/head.html", { encoding: "utf8" }),
     body: fs.readFileSync("html/body.html", { encoding: "utf8" }),
 };
+var selectedPath;
 
 let sketchFolder, sketchName, sketchIndex;
 
@@ -35,12 +36,19 @@ if (!process.argv[2]) {
     return;
 } else {
     sketchName = process.argv[2];
-    sketchFolder = config.pathToSketches + sketchName;
-    if (fs.existsSync(sketchFolder)) {
-        console.log(`The sketch '${sketchName}' exists.`);
-        // console.log(sketchFolder);
-        sketchIndex = fs.readFileSync(sketchFolder + "/index.html", { encoding: "utf8" });
-    } else {
+    let match = false;
+    for (let i = 0; i < config.pathsToSketches.length; i++) {
+        sketchFolder = config.pathsToSketches[i] + sketchName;
+        if (fs.existsSync(sketchFolder)) {
+            console.log(`The sketch '${sketchName}' exists.`);
+            // console.log(sketchFolder);
+            sketchIndex = fs.readFileSync(sketchFolder + "/index.html", { encoding: "utf8" });
+            selectedPath = i;
+            match = true;
+            break;
+        }
+    }
+    if (!match) {
         console.log(`The sketch '${sketchName}' does not exist.`);
         return;
     }
@@ -175,15 +183,16 @@ function handleRequest(req, res) {
         // pathname = '/index.html';
     }
 
-    // If the path non-empty, we check whether it relates to Les environs
+    // If the path is non-empty, we check whether it relates to Les environs.
 
     var testEnvirons = /les-environs\//g;
     if (pathname.match(testEnvirons)) {
-        let injecting = pathname;
-        injecting = injecting.replace(/les-environs\//g, "");
-        pathname = config.pathToSketches + "Les-environs" + injecting;
+        // let injecting = pathname;
+        // injecting = injecting.replace(/les-environs\//g, "");
+        // pathname = config.pathToSketches + "Les-environs" + injecting;
+        pathname = "./" + pathname.replace(/les-environs\//g, "");
     } else if (!pathname.match(/http/g)) {
-        pathname = config.pathToSketches + sketchName + pathname;
+        pathname = config.pathsToSketches[selectedPath] + sketchName + pathname;
     }
 
     // console.log("The pathname is : " + pathname);
@@ -310,6 +319,9 @@ io.sockets.on('connection', function(socket) {
             }]
         };
         // console.log("Sending message", msg.address, msg.args, "to", udpPort.options.remoteAddress + ":" + udpPort.options.remotePort);
+        udpPort.send(msg);
+    });
+    socket.on('msgToSCD', function(msg) {
         udpPort.send(msg);
     });
 

@@ -1,3 +1,6 @@
 module.exports = {
-    pathToSketches: "/Users/guillaumepelletier/Desktop/Dropbox/Art/p5/"
+    pathsToSketches: [
+        "./",
+        "/Users/guillaumepelletier/Desktop/Dropbox/Art/p5/"
+    ]
 };
