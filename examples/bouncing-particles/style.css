@@ -11,7 +11,7 @@ canvas {
     left: 650px;
     bottom: 0;
     right: 0;
-    border: 1px solid black;
+    box-shadow: inset 0px 0px 0px 10px #b4c8c8, inset 0px 0px 0px 11px black;
 }
 
 .canvasZero {

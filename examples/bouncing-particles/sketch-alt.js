@@ -21,7 +21,7 @@
 if (false) {
 
     draw = function() {
-        background(180, 200, 200);
+        clear();
         var notesToSend = 0;
         // The first thing we changed here is adding some extra
         // velocity to the particles, which depend on an oscillating
@@ -53,7 +53,7 @@ if (false) {
             // that we created above.
             let notes = (Math.sin(frequency) > 0) ? random([2, 5, 10]) : random([0, 3, 7]);
             let size = 3 + (6 * note);
-            ellipse(p.x * 600, p.y * 600, size);
+            ellipse(10 + p.x * 580, 10 + p.y * 580, size);
             if (note && notesToSend <  5) {
                 var msgToSend = {
                     address: "/bouncy",
@@ -83,7 +83,7 @@ if (false) {
         }
     }
     draw = function() {
-        background(180, 200, 200);
+        clear();
         var notesToSend = 0;
         var frequency = frameCount * 0.1;
         var extraVelocity = Math.sin(frequency) * 0.01;
@@ -108,8 +108,8 @@ if (false) {
             }
             notesToSend += note;
             let notes = (Math.sin(frequency) > 0) ? random([2, 5, 10]) : random([0, 3, 7]);
-            let size = 3 + (18 * note);
-            ellipse(p.x * 600, p.y * 600, size);
+            let size = 3 + (6 * note);
+            ellipse(10 + p.x * 580, 10 + p.y * 580, size);
             if (note && notesToSend <  5) {
                 var msgToSend = {
                     address: "/bouncy",

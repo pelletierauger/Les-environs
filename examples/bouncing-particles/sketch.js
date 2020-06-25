@@ -34,11 +34,11 @@ function setup() {
 }
 
 draw = function() {
-    background(180, 200, 200);
+    clear();
     // We set a number that scales the velocity of the particles.
     // Changing this scalar while the sketch is running is a lot of fun.
     // The bigger this number is, the faster the particles will go.
-    var velocityScalar = 0.02;
+    var velocityScalar = 0.01;
     // The notesToSend variable will be used to count the amount
     // of particles that bounce within a single draw() loop.
     // We will use this number to limit the amount of
@@ -72,8 +72,8 @@ draw = function() {
         // We increment our count of notes.
         notesToSend += note;
         // The size of a particle is bigger if it is currently bouncing.
-        let size = 3 + (note * 12);
-        ellipse(p.x * 600, p.y * 600, size);
+        let size = 3 + (note * 6);
+        ellipse(10 + p.x * 580, 10 + p.y * 580, size);
         // We test if a note must be sent and if we have not reached
         // our maximum amount of notes for a single draw() loop.
         if (note == 1 && notesToSend < 5) {
