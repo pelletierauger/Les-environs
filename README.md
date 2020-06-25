@@ -101,9 +101,9 @@ The commands:
 * `cc` Clears the contents of both consoles.
 * `curtain` Toggles the visibility of a “curtain” that hides the p5.js sketch below the editors. This is useful for “distraction free” editing—when you don’t need to see the sketch for a while.
 * `js` Puts you in “JavaScript mode”, hiding the SuperCollider editor and the SuperCollider console, and giving the JavaScript editor more vertical space.
-*  `scd` Puts you in “SuperCollider mode”, hiding the JavaScript editor and the JavaScript console, and giving the SuperCollider editors more vertical space.
+*  `scd` Puts you in “SuperCollider mode”, hiding the JavaScript editor and the JavaScript console, and giving the SuperCollider editor more vertical space.
 * `both` Displays both editors and gives them their original dimensions.
 * `scd<>js` Toggles between the “JavaScript mode” and the “SuperCollider mode”.
 * `width <any number>` Gives both editors the width given as the argument.
 * `( <any JavaScript code>` You can also evaluate JavaScript code in the terminal, by preceding it with an opening `(` and a space ` `.
-* `' <any JavaScript code` You can also evalute JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `' frameCount` will tell you the current value of the global p5.js variable `frameCount`.
+* `' <any JavaScript code>` You can also evalute JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `' frameCount` will tell you the current value of the global p5.js variable `frameCount`.
