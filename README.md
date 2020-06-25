@@ -49,14 +49,14 @@ Importantly, a block of code is not defined in the same way in the SuperCollider
 // It can contain empty lines and will still evaluate correctly.
 (
 {
-	var env = EnvGen.kr(Env.new([0, 1, 0], [0.01, 2]), doneAction: 2);
-	
-	var op2 = SinOsc.ar(440 * 2);
-	
-	var op1 = SinOsc.ar(440!2, op2);
-	
-	op1 * env * 0.1;
-	
+    var env = EnvGen.kr(Env.new([0, 1, 0], [0.01, 2]), doneAction: 2);
+
+    var op2 = SinOsc.ar(440 * 2);
+
+    var op1 = SinOsc.ar(440!2, op2);
+
+    op1 * env * 0.1;
+
 }.play;
 )
 ```
@@ -66,21 +66,21 @@ In the JavaScript editor, a block is simply a set of adjacent lines that are not
 ```javascript
 // This is a JavaScript block of code.
 draw = function() {
-	for (let i = 0; i < 100; i++) {
-		let x = cos(i) * i;
-		let y = sin(i) * i;
-		ellipse(x, y, 1);
-	}
+    for (let i = 0; i < 100; i++) {
+        let x = cos(i) * i;
+        let y = sin(i) * i;
+        ellipse(x, y, 1);
+    }
 };
 
 // This is another JavaScript block of code. 
 // This one would result in an error because of the empty line.
 draw = function() {
-	for (let x = 0; x < 100; x++) {
-		for (let y = 0; y < 100; y++) {
-			ellipse(x, y, 1);
-		}
-	}
+    for (let x = 0; x < 100; x++) {
+        for (let y = 0; y < 100; y++) {
+            ellipse(x, y, 1);
+        }
+    }
 
 };
 ```
