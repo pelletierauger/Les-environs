@@ -28,14 +28,14 @@ Visit this URL and you’ll see the p5.js sketch running in the app.
 
 When you first open the app, both editors and both consoles are empty. To start live coding, you can click on any of the tabs that are next to the terminal. The code of the selected file (in darker grey) will be shown in its editor—either SuperCollider or JavaScript.
 
-Once you change any of the tabs, it will display a small black dot to the left of its filename, to indicate that it contains unsaved changes. In the image above, you can see that the `sketch.js` tab contains unsaved changes. To save your changes, you’ll need to use the terminal (see the section on the terminal).
+Once you change the contents of any of the tabs, it will display a small black dot to the left of its filename, to indicate that it contains unsaved changes. In the image above, you can see that the `sketch.js` tab contains unsaved changes. To save your changes, you’ll need to use the terminal (see the section on the terminal).
 
 There is also an invisible area at the bottom right of the screen that will disable keyboard input to the editors when the mouse cursor is within it. This is useful for very frequent tasks that might require keyboard input—for example, while the mouse is in this corner, pressing the spacebar will toggle the looping of the p5.js sketch.
 
 
 ## Evaluating code
 
-There are two different ways of evaluating code in both editors: you can evaluate a single line, or a block of code. To evalute of single line, simply put the text cursor anywhere on the line, and press “Shift Enter”. To evalute a block of code, put the cursor anywhere within the block, and press “Command Enter”.
+There are two different ways of evaluating code in both editors: you can evaluate a single line, or a block of code. To evaluate a single line, put the text cursor anywhere on the line, and press “Shift Enter”. To evaluate a block of code, put the cursor anywhere within the block, and press “Command Enter”.
 
 Importantly, a block of code is not defined in the same way in the SuperCollider editor and the JavaScript editor. This relates to how both languages are constructed. A block of SuperCollider code must be wrapped between an opening `(` and a closing `)`.
 
@@ -65,7 +65,7 @@ Importantly, a block of code is not defined in the same way in the SuperCollider
 )
 ```
 
-In the JavaScript editor, a block is simply a set of adjacent lines that are not separated by any blank lines.
+In the JavaScript editor, a block is simply a set of adjacent lines that are not separated by any empty lines.
 
 ```javascript
 // This is a JavaScript block of code.
