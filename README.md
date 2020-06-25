@@ -26,7 +26,11 @@ Visit this URL and you’ll see the p5.js sketch running in the app.
 
 ![Interface elements and description](https://dl.dropboxusercontent.com/s/376jrfqcgt089x1/interface-2.png)
 
-When you first open the app, both editors and both consoles will be empty. To start live coding, you can click on any of the tabs that are next to the terminal. The code of the selected file (in darker grey) will be shown in its editor—either SuperCollider or JavaScript.
+When you first open the app, both editors and both consoles are empty. To start live coding, you can click on any of the tabs that are next to the terminal. The code of the selected file (in darker grey) will be shown in its editor—either SuperCollider or JavaScript.
+
+Once you change any of the tabs, it will display a small black dot to the left of its filename, to indicate that it contains unsaved changes. In the image above, you can see that the `sketch.js` tab contains unsaved changes. To save your changes, you’ll need to use the terminal (see the section on the terminal).
+
+There is also an invisible area at the bottom right of the screen that will disable keyboard input to the editors when the mouse cursor is within it. This is useful for very frequent tasks that might require keyboard input—for example, while the mouse is in this corner, pressing the spacebar will toggle the looping of the p5.js sketch.
 
 
 ## Evaluating code
@@ -109,5 +113,6 @@ The commands:
 * `width <any number>` Gives both editors the width given as the argument.
 * `( <any JavaScript code>` You can also evaluate JavaScript code in the terminal, by preceding it with an opening `(` and a space ` `.
 * `' <any JavaScript code>` You can also evaluate JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `' frameCount` will tell you the current value of the global p5.js variable `frameCount`.
+* `loop` Toggles the looping of the p5.js sketch.
 
 The terminal also keeps a history of the commands that you input. To navigate this history, press the “up arrow” and the “down arrow”. Once you find a command that you want to input again, press “Enter”.
