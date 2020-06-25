@@ -39,9 +39,9 @@ Importantly, a block of code is not defined in the same way in the SuperCollider
 // This is a SuperCollider block of code.
 (
 {
-	var env = EnvGen.kr(Env.new([0, 1, 0], [0.01, 2]), doneAction: 2);
-	var sig = SinOsc.ar(440!2);
-	sig * env * 0.1;
+    var env = EnvGen.kr(Env.new([0, 1, 0], [0.01, 2]), doneAction: 2);
+    var sig = SinOsc.ar(440!2);
+    sig * env * 0.1;
 }.play;
 )
 
