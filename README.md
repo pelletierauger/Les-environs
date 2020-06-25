@@ -40,7 +40,7 @@ There are two different ways of evaluating code in both editors: you can evaluat
 Importantly, a block of code is not defined in the same way in the SuperCollider editor and the JavaScript editor. This relates to how both languages are constructed. A block of SuperCollider code must be wrapped between an opening `(` and a closing `)`.
 
 ```supercollider
-// This is a SuperCollider block of code.
+// This is a block of SuperCollider code.
 (
 {
     var env = EnvGen.kr(Env.new([0, 1, 0], [0.01, 2]), doneAction: 2);
@@ -49,7 +49,7 @@ Importantly, a block of code is not defined in the same way in the SuperCollider
 }.play;
 )
 
-// This is another SuperCollider block of code. 
+// This is another block of SuperCollider code. 
 // It can contain empty lines and will still evaluate correctly.
 (
 {
@@ -68,7 +68,7 @@ Importantly, a block of code is not defined in the same way in the SuperCollider
 In the JavaScript editor, a block is simply a set of adjacent lines that are not separated by any empty lines.
 
 ```javascript
-// This is a JavaScript block of code.
+// This is a block of JavaScript code.
 draw = function() {
     for (let i = 0; i < 100; i++) {
         let x = cos(i) * i;
@@ -77,7 +77,7 @@ draw = function() {
     }
 };
 
-// This is another JavaScript block of code. 
+// This is another block of JavaScript code. 
 // This one would result in an error because of the empty line.
 draw = function() {
     for (let x = 0; x < 100; x++) {
