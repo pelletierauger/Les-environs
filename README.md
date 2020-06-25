@@ -12,7 +12,7 @@ This is a Node.js app, so you’ll need Node.js already installed, as well as Su
 
 ## Starting a sketch
 
-Les environs works by opening a p5.js sketch and making it editable via live coding. A sketch needs to be prepared in some specific ways to work in Les environs. You can find an example of a working sketch in the `example` folder. The example is a good template, and you can make copies of it when you start new projects.
+Les environs works by opening a p5.js sketch and making it editable via live coding. A sketch needs to be prepared in some specific ways to work in Les environs. You can find an example of a working sketch in the `examples` folder. The example is a good template, and you can make copies of it when you start new projects.
 
 To set up the directories where Les environs will look for sketches, open the file `config.js` and put the desired folders into the `pathsToSketches` array. Les environs will look for sketches in that list of folders, in order, and will stop looking once it finds a match.
 
