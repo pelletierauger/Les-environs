@@ -108,6 +108,6 @@ The commands:
 * `scd<>js` Toggles between the “JavaScript mode” and the “SuperCollider mode”.
 * `width <any number>` Gives both editors the width given as the argument.
 * `( <any JavaScript code>` You can also evaluate JavaScript code in the terminal, by preceding it with an opening `(` and a space ` `.
-* `' <any JavaScript code>` You can also evalute JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `' frameCount` will tell you the current value of the global p5.js variable `frameCount`.
+* `' <any JavaScript code>` You can also evaluate JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `' frameCount` will tell you the current value of the global p5.js variable `frameCount`.
 
 The terminal also keeps a history of the commands that you input. To navigate this history, press the “up arrow” and the “down arrow”. Once you find a command that you want to input again, press “Enter”.
