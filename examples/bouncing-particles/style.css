@@ -1,7 +1,7 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: #b4c8c8;
+    background-color: #C2C2C2;
 }
 canvas {
     display: block;
@@ -11,7 +11,8 @@ canvas {
     left: 650px;
     bottom: 0;
     right: 0;
-    box-shadow: inset 0px 0px 0px 10px #b4c8c8, inset 0px 0px 0px 11px black;
+    box-shadow: inset 0px 0px 0px 10px #C2C2C2, inset 0px 0px 0px 11px black;
+    background: #CDCDCD;
 }
 
 .canvasZero {
