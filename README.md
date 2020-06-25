@@ -24,7 +24,86 @@ Visit this URL and you’ll see the p5.js sketch running in the app.
 
 ## The interface
 
-Les environs’s interface is very minimalistic but it has a lot of features that can make live coding more enjoyable.
+![Interface elements and description](https://dl.dropboxusercontent.com/s/376jrfqcgt089x1/interface-2.png)
 
-![Interface elements and description](https://dl.dropboxusercontent.com/s/5bgjbepxw0rp5ah/interface.png)
+When you first open the app, both editors and both consoles will be empty. To start live coding, you can click on any of the tabs that are next to the terminal. The code of the selected file (in darker grey) will be shown in its editor—either SuperCollider or JavaScript.
 
+
+## Evaluating code
+
+There are two different ways of evaluating code in both editors: you can evaluate a single line, or a block of code. To evalute of single line, simply put the text cursor anywhere on the line, and press “Shift Enter”. To evalute a block of code, put the cursor anywhere within the block, and press “Command Enter”.
+
+Importantly, a block of code is not defined in the same way in the SuperCollider editor and the JavaScript editor. This relates to how both languages are constructed. A block of SuperCollider code must be wrapped between an opening `(` and a closing `)`.
+
+```supercollider
+// This is a SuperCollider block of code.
+(
+{
+	var env = EnvGen.kr(Env.new([0, 1, 0], [0.01, 2]), doneAction: 2);
+	var sig = SinOsc.ar(440!2);
+	sig * env * 0.1;
+}.play;
+)
+
+// This is another SuperCollider block of code. 
+// It can contain empty lines and will still evaluate correctly.
+(
+{
+	var env = EnvGen.kr(Env.new([0, 1, 0], [0.01, 2]), doneAction: 2);
+	
+	var op2 = SinOsc.ar(440 * 2);
+	
+	var op1 = SinOsc.ar(440!2, op2);
+	
+	op1 * env * 0.1;
+	
+}.play;
+)
+```
+
+In the JavaScript editor, a block is simply a set of adjacent lines that are not separated by any blank lines.
+
+```javascript
+// This is a JavaScript block of code.
+draw = function() {
+	for (let i = 0; i < 100; i++) {
+		let x = cos(i) * i;
+		let y = sin(i) * i;
+		ellipse(x, y, 1);
+	}
+};
+
+// This is another JavaScript block of code. 
+// This one would result in an error because of the empty line.
+draw = function() {
+	for (let x = 0; x < 100; x++) {
+		for (let y = 0; y < 100; y++) {
+			ellipse(x, y, 1);
+		}
+	}
+
+};
+```
+
+The commented lines are not considered empty, so they can’t be used to separate blocks of code.
+
+## The terminal
+
+The terminal is specific to this app—it has its own set of commands that you can use to perform various task while you work on your projects.
+
+The commands:
+
+* `save <filename>` Saves a file to disk.
+* `saveall` Saves all the files to disk.
+* `revert <filename>` Reverts the changes in one file. This resets the contents of a tab to the contents of the corresponding file that is currently saved to disk.
+* `new <filename>` Creates a new tab containing an empty document. The file extension (either .scd or .js) must be given. This new file will not be saved to disk until you use the `save` command on it.
+* `hide` or `h` Toggles the visibility of both code editors.
+* `cc` Clears the contents of both consoles.
+* `curtain` Toggles the visibility of a “curtain” that hides the p5.js sketch below the editors. This is useful for “distraction free” editing—when you don’t need to see the sketch for a while.
+* `js` Puts you in “JavaScript mode”, hiding the SuperCollider editor and the SuperCollider console, and giving the JavaScript console more vertical space.
+*  `scd` Puts you in “SuperCollider mode”, hiding the JavaScript editor and the JavaScript console, and giving the SuperCollider console more vertical space.
+* `both` Displays both editors and gives them their original dimensions.
+* `scd<>js` Toggles between the “JavaScript mode” and the “SuperCollider mode”.
+* `width <any number>` Gives both editor the width given as the argument.
+* `( <any JavaScript code>` You can also evaluate JavaScript code in the terminal, by preceding it with an opening `( ` and space ` `.
+* `' <any JavaScript code` You can also evalute JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `' frameCount` will tell you the current value of the global p5.js variable `frameCount`.
