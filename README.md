@@ -117,7 +117,7 @@ The terminal also keeps a history of the commands that you input. To navigate th
 
 ## Support for GLSL
 
-The way GLSL is currently supported is done through the JavaScript editor. There are two special strings that you can put in your JavaScript code to create regions where GLSL is properly highlighted. Here’s a example where GLSL code is wrapped in a template string. The commented lines, `//begin GLSL` and `//end GLSL` make the editor properly highlight the GLSL syntax in the enclosed region. They have no effect on the code itself.
+The way GLSL is currently supported is done through the JavaScript editor. There are two special strings that you can put in your JavaScript code to create regions where GLSL is properly highlighted. Here’s a example where GLSL code is wrapped in a template string. The commented lines, `// begin GLSL` and `// end GLSL` make the editor properly highlight the GLSL syntax in the enclosed region. They have no effect on the code itself.
 
 ```glsl
 vertexShaderCode = `
