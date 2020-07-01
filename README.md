@@ -93,9 +93,7 @@ The commented lines are not considered empty, so they can’t be used to separat
 
 ## The terminal
 
-The terminal is specific to this app—it has its own set of commands that you can use to perform various tasks while you work on your projects.
-
-Type any of the following commands and then press “Enter” to input it.
+The terminal has a set of commands that you can use to perform various tasks while you work on your projects. Type any of the following commands and then press “Enter” to input it.
 
 The commands:
 
@@ -111,8 +109,30 @@ The commands:
 * `both` Displays both editors and gives them their original dimensions.
 * `scd<>js` Toggles between the “JavaScript mode” and the “SuperCollider mode”.
 * `width <any number>` Gives both editors the width given as the argument.
-* `( <any JavaScript code>` You can also evaluate JavaScript code in the terminal, by preceding it with an opening `(` and a space ` `.
-* `' <any JavaScript code>` You can also evaluate JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `' frameCount` will tell you the current value of the global p5.js variable `frameCount`.
+* `(<any JavaScript code>` You can also evaluate JavaScript code in the terminal, by preceding it with an opening `(`.
+* `'<any JavaScript code>` You can also evaluate JavaScript code and then send its return value to the JavaScript console. This is useful for finding out what is the current value of a global variable. For example, `'frameCount` will tell you the current value of the global p5.js variable `frameCount`.
 * `loop` Toggles the looping of the p5.js sketch.
 
-The terminal also keeps a history of the commands that you input. To navigate this history, press the “up arrow” and the “down arrow”. Once you find a command that you want to input again, press “Enter”.
+The terminal also keeps a history of the commands that you input. To navigate this history, press the “up arrow” and the “down arrow”. Once you find a command that you want to input again, press “Enter”. It will input the command and send you back at the most recent location in the input history.
+
+## Support for GLSL
+
+The way GLSL is currently supported is done through the JavaScript editor. There are two special strings that you can put in your JavaScript code to create regions where GLSL is properly highlighted. Here’s a example where GLSL code is wrapped in a template string. The commented lines, `//begin GLSL` and `//end GLSL` make the editor properly highlight the GLSL syntax in the enclosed region. They have no effect on the code itself.
+
+```glsl
+vertexShaderCode = `
+    // beginGLSL
+    attribute vec2 coordinates;
+    varying vec2 myposition;
+    varying vec2 center;
+    void main(void) {
+        gl_Position = vec4(coordinates, 0.0, 1.0);
+        center = vec2(gl_Position.x, gl_Position.y);
+        myposition = vec2(gl_Position.x, gl_Position.y);
+    }
+    // endGLSL
+`;
+updateShaderProgram();
+```
+
+You can see that adding a function call at the end of this block of code can allow you to live code GLSL shaders. This block sets the content of the vertex shader, and then calls a function that would update the shader program and also probably display whatever geometry uses this program.
