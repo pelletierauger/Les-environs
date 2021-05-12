@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/pelletierauger/Les-environs#readme",
   "dependencies": {
-    "codemirror": "^5.41.0",
+    "codemirror": "^5.58.2",
     "osc": "^2.2.4",
     "supercolliderjs": "^0.14.2"
   }
